@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Evidencias de pruebas
+evidencias/
+rojo.txt
+verde.txt
