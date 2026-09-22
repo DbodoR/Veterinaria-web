@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Panel de administracion | Veterinaria</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+
+<header class="barra">
+    <span class="marca">Veterinaria</span>
+    <span class="sesion">
+        <span sec:authentication="name">usuario</span>
+        <form th:action="@{/logout}" method="post" class="en-linea">
+            <button type="submit" class="boton-enlace">Cerrar sesion</button>
+        </form>
+    </span>
+</header>
+
+<div class="disposicion">
+
+    <!-- HU-21 CA2: cinco maestros, la pantalla de reservas y los dos reportes -->
+    <nav class="menu">
+        <p class="grupo">Maestros</p>
+        <a th:href="@{/admin/clientes}">Clientes</a>
+        <a th:href="@{/admin/veterinarios}">Veterinarios</a>
+        <a th:href="@{/admin/mascotas}">Mascotas</a>
+        <a th:href="@{/admin/servicios}">Servicios</a>
+        <a th:href="@{/admin/productos}">Productos</a>
+
+        <p class="grupo">Transaccional</p>
+        <a th:href="@{/admin/citas}">Reservas de citas</a>
+
+        <p class="grupo">Reportes</p>
+        <a th:href="@{/admin/reportes/citas}">Citas e ingresos</a>
+        <a th:href="@{/admin/reportes/historias}">Historias clinicas</a>
+    </nav>
+
+    <main class="contenido">
+        <h1>Panel de administracion</h1>
+
+        <!-- HU-21 CA3: resumen del dia -->
+        <section class="tarjetas">
+            <article class="tarjeta">
+                <p class="rotulo">Citas de hoy</p>
+                <p class="cifra" th:text="${citasHoy}">0</p>
+            </article>
+            <article class="tarjeta">
+                <p class="rotulo">Citas pendientes</p>
+                <p class="cifra" th:text="${citasPendientes}">0</p>
+            </article>
+            <article class="tarjeta">
+                <p class="rotulo">Clientes activos</p>
+                <p class="cifra" th:text="${clientesActivos}">0</p>
+            </article>
+        </section>
+    </main>
+</div>
+
+</body>
+</html>

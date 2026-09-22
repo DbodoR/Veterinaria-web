@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Acceso | Veterinaria</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body class="pantalla-acceso">
+
+<main class="tarjeta-acceso">
+    <h1>Veterinaria</h1>
+    <p class="subtitulo">Ingresa con tu correo y contrasena</p>
+
+    <div class="alerta alerta-error" th:if="${mensajeError}" th:text="${mensajeError}"></div>
+    <div class="alerta alerta-exito" th:if="${mensajeExito}" th:text="${mensajeExito}"></div>
+
+    <form th:action="@{/login}" method="post">
+        <label for="username">Correo</label>
+        <input type="email" id="username" name="username" required autofocus>
+
+        <label for="password">Contrasena</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit">Ingresar</button>
+    </form>
+</main>
+
+</body>
+</html>

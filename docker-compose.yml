@@ -1,0 +1,28 @@
+# PostgreSQL local para desarrollo.
+#
+#   docker compose up -d      levantar
+#   docker compose down       apagar (conserva los datos)
+#   docker compose down -v    apagar y BORRAR los datos
+#
+# Los valores coinciden con application-dev.properties.
+services:
+  db:
+    image: postgres:16
+    container_name: veterinaria-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: veterinaria
+      POSTGRES_USER: veterinaria
+      POSTGRES_PASSWORD: veterinaria
+    ports:
+      - "5432:5432"
+    volumes:
+      - veterinaria_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U veterinaria -d veterinaria"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  veterinaria_data:
