@@ -36,3 +36,6 @@ build/
 evidencias/
 rojo.txt
 verde.txt
+
+target_classes/
+target_test-classes/
