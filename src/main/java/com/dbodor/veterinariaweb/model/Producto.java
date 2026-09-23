@@ -28,6 +28,8 @@ public class Producto {
 
     @Column(name = "es_recetable_veterinario")
     private Boolean esRecetableVeterinario;
-    private String estado;
+
+    @Enumerated(EnumType.STRING)
+    private EstadoProducto estado;
 
 }
