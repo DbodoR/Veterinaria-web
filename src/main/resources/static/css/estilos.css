@@ -17,7 +17,7 @@ body {
     background: var(--fondo);
 }
 
-/* ---------- Acceso ---------- */
+/*Acceso*/
 .pantalla-acceso {
     display: flex;
     align-items: center;
@@ -64,7 +64,7 @@ button {
 .alerta-error { background: #fdecea; color: var(--error); }
 .alerta-exito { background: #e8f5ec; color: var(--exito); }
 
-/* ---------- Estructura interna ---------- */
+/* Estructura interna */
 .barra {
     display: flex;
     justify-content: space-between;
@@ -127,9 +127,7 @@ button {
 .rotulo { margin: 0; color: var(--suave); font-size: .82rem; }
 .cifra { margin: .35rem 0 0; font-size: 2rem; font-weight: 700; }
 
-/* ============================================================
-   Estilos de los maestros. Pegar al final de estilos.css
-   ============================================================ */
+/*Estilos de los maestros. Pegar al final de estilos.css*/
 
 .encabezado-seccion {
     display: flex;
@@ -157,7 +155,7 @@ button {
     border-left: 3px solid var(--acento);
 }
 
-/* ---------- Busqueda ---------- */
+/*Busqueda */
 .barra-busqueda {
     display: flex;
     gap: .6rem;
@@ -177,7 +175,7 @@ button {
     padding: .55rem 1.1rem;
 }
 
-/* ---------- Tabla ---------- */
+/*Tabla */
 .tabla {
     width: 100%;
     border-collapse: collapse;
@@ -227,7 +225,7 @@ button {
     border-radius: 8px;
 }
 
-/* ---------- Formulario ---------- */
+/* Formulario*/
 .formulario {
     background: #fff;
     border: 1px solid var(--linea);
@@ -265,3 +263,30 @@ button {
 
 .alerta p { margin: .3rem 0; }
 .menor { font-size: .82rem; opacity: .85; }
+
+/*Añadidos de HU-06 */
+
+.subtitulo-seccion {
+    margin: 1.75rem 0 .5rem;
+    font-size: .78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--suave);
+    border-bottom: 1px solid var(--linea);
+    padding-bottom: .4rem;
+}
+
+.subtitulo-seccion:first-child { margin-top: 0; }
+
+.fila { display: flex; gap: 1rem; }
+.fila .campo { flex: 1; }
+
+.barra-busqueda select {
+    padding: .55rem .75rem;
+    border: 1px solid var(--linea);
+    border-radius: 6px;
+    font-size: 1rem;
+    background: #fff;
+    color: var(--tinta);
+}

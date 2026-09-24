@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Veterinarios | Veterinaria</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+
+<header class="barra">
+    <span class="marca">Veterinaria</span>
+    <form th:action="@{/logout}" method="post" class="en-linea">
+        <button type="submit" class="boton-enlace">Cerrar sesion</button>
+    </form>
+</header>
+
+<div class="disposicion">
+
+    <nav class="menu">
+        <p class="grupo">Maestros</p>
+        <a th:href="@{/admin/clientes}">Clientes</a>
+        <a th:href="@{/admin/veterinarios}" class="activo">Veterinarios</a>
+        <a th:href="@{/admin/mascotas}">Mascotas</a>
+        <a th:href="@{/admin/servicios}">Servicios</a>
+        <a th:href="@{/admin/productos}">Productos</a>
+
+        <p class="grupo">Transaccional</p>
+        <a th:href="@{/admin/citas}">Reservas de citas</a>
+
+        <p class="grupo">Reportes</p>
+        <a th:href="@{/admin/reportes/citas}">Citas e ingresos</a>
+        <a th:href="@{/admin/reportes/historias}">Historias clinicas</a>
+    </nav>
+
+    <main class="contenido">
+
+        <div class="encabezado-seccion">
+            <h1>Veterinarios</h1>
+            <a th:href="@{/admin/veterinarios/nuevo}" class="boton">Nuevo veterinario</a>
+        </div>
+
+        <div class="alerta alerta-exito" th:if="${passwordTemporal}">
+            <p th:text="${mensajeExito}">Veterinario registrado.</p>
+            <p>
+                Contrasena temporal para
+                <strong th:text="${correoNuevo}">correo</strong>:
+                <code th:text="${passwordTemporal}">clave</code>
+            </p>
+            <p class="menor">Entregala al profesional. Se le pedira cambiarla en su primer ingreso.</p>
+        </div>
+
+        <form th:action="@{/admin/veterinarios}" method="get" class="barra-busqueda">
+            <input type="text" name="buscar" th:value="${buscar}"
+                   placeholder="Buscar por nombre o tarjeta profesional">
+            <select name="especialidad">
+                <option value="">Todas las especialidades</option>
+                <option th:each="e : ${especialidades}" th:value="${e}" th:text="${e}"
+                        th:selected="${e == especialidadFiltro}">Especialidad</option>
+            </select>
+            <button type="submit">Filtrar</button>
+            <a th:href="@{/admin/veterinarios}" class="boton-enlace"
+               th:if="${buscar != '' or especialidadFiltro != ''}">Limpiar</a>
+        </form>
+
+        <table class="tabla" th:if="${!veterinarios.isEmpty()}">
+            <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Tarjeta</th>
+                <th>Especialidad</th>
+                <th>Jornada</th>
+                <th>Tarifa</th>
+                <th>Estado</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="v : ${veterinarios}">
+                <td th:text="${v.nombre}">Nombre</td>
+                <td th:text="${v.tarjetaProfesional}">Tarjeta</td>
+                <td th:text="${v.especialidad}">Especialidad</td>
+                <td th:text="${v.horaInicio} + ' a ' + ${v.horaFin}">Jornada</td>
+                <td th:text="'$' + ${#numbers.formatDecimal(v.tarifa, 0, 'POINT', 0, 'DEFAULT')}">Tarifa</td>
+                <td>
+                    <span class="etiqueta"
+                          th:classappend="${v.estaActivo()} ? 'etiqueta-activa' : 'etiqueta-inactiva'"
+                          th:text="${v.estaActivo()} ? 'ACTIVO' : 'INACTIVO'">Estado</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <p class="vacio" th:if="${veterinarios.isEmpty()}">
+            No se encontraron veterinarios.
+        </p>
+
+    </main>
+</div>
+
+</body>
+</html>
