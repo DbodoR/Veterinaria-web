@@ -1,5 +1,6 @@
 package com.dbodor.veterinariaweb.model;
 
+import com.dbodor.veterinariaweb.enums.EstadoServicio;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,6 +31,9 @@ public class Servicio {
 
     @Column(name = "es_consulta_veterinaria")
     private Boolean esConsultaVeterinaria;
-    private String estado;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado", nullable = false)
+    private EstadoServicio estado;
 
 }
