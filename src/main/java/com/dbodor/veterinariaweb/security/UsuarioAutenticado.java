@@ -1,6 +1,6 @@
 package com.dbodor.veterinariaweb.security;
 
-import com.dbodor.veterinariaweb.model.EstadoUsuario;
+import com.dbodor.veterinariaweb.enums.EstadoUsuario;
 import com.dbodor.veterinariaweb.model.Usuario;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

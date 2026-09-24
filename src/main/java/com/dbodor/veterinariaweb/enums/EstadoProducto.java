@@ -1,4 +1,4 @@
-package com.dbodor.veterinariaweb.model;
+package com.dbodor.veterinariaweb.enums;
 
 public enum EstadoProducto {
     ACTIVO,

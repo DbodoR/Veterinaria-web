@@ -28,6 +28,10 @@ public class CitaServiceImpl implements CitaService {
             Producto antiparasitario = productoRepository.findByNombreContainingIgnoreCase("Antiparasitario")
                     .orElseThrow(() -> new IllegalStateException("No se encontró un producto antiparasitario en el catálogo"));
 
+            if (antiparasitario.getStock() == null || antiparasitario.getStock() <= 0) {
+                throw new IllegalStateException("El producto prescrito no cuenta con stock disponible");
+            }
+
             detallePrescripcion = new DetalleRecetaCita();
             detallePrescripcion.setProducto(antiparasitario);
             detallePrescripcion.setCantidad(1);

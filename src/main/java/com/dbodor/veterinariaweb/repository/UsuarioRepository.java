@@ -1,7 +1,7 @@
 package com.dbodor.veterinariaweb.repository;
 
-import com.dbodor.veterinariaweb.model.EstadoUsuario;
-import com.dbodor.veterinariaweb.model.RolUsuario;
+import com.dbodor.veterinariaweb.enums.EstadoUsuario;
+import com.dbodor.veterinariaweb.enums.RolUsuario;
 import com.dbodor.veterinariaweb.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

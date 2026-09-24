@@ -1,6 +1,6 @@
 package com.dbodor.veterinariaweb.service.impl;
 
-import com.dbodor.veterinariaweb.model.EstadoProducto;
+import com.dbodor.veterinariaweb.enums.EstadoProducto;
 import com.dbodor.veterinariaweb.model.Producto;
 import com.dbodor.veterinariaweb.repository.ProductoRepository;
 import com.dbodor.veterinariaweb.service.ProductoService;
