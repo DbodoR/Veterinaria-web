@@ -9,7 +9,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.SecureRandom;
 import java.util.List;
 
 /**
@@ -18,17 +17,16 @@ import java.util.List;
 @Service
 public class ClienteService {
 
-    /** Caracteres de la contrasena temporal. Se omiten los ambiguos (O, 0, l, 1). */
-    private static final String ALFABETO = "ABCDEFGHJKMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
-    private static final int LARGO_TEMPORAL = 10;
-
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
-    private final SecureRandom random = new SecureRandom();
+    private final GeneradorPassword generadorPassword;
 
-    public ClienteService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+    public ClienteService(UsuarioRepository usuarioRepository,
+                          PasswordEncoder passwordEncoder,
+                          GeneradorPassword generadorPassword) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
+        this.generadorPassword = generadorPassword;
     }
 
     /** Resultado del alta: el cliente guardado y la clave que hay que entregarle. */
@@ -56,7 +54,7 @@ public class ClienteService {
             throw DatoDuplicadoException.documento();
         }
 
-        String temporal = generarPasswordTemporal();
+        String temporal = generadorPassword.temporal();
 
         Usuario cliente = new Usuario();
         cliente.setNombre(form.getNombre().trim());
@@ -71,17 +69,5 @@ public class ClienteService {
         cliente.setDebeCambiarPassword(Boolean.TRUE);
 
         return new AltaCliente(usuarioRepository.save(cliente), temporal);
-    }
-
-    /**
-     * Clave de un solo uso que el administrador entrega al cliente.
-     * En el primer ingreso el sistema le exigira cambiarla (HU-05).
-     */
-    private String generarPasswordTemporal() {
-        StringBuilder sb = new StringBuilder(LARGO_TEMPORAL);
-        for (int i = 0; i < LARGO_TEMPORAL; i++) {
-            sb.append(ALFABETO.charAt(random.nextInt(ALFABETO.length())));
-        }
-        return sb.toString();
     }
 }
