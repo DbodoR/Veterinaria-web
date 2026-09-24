@@ -39,3 +39,8 @@ verde.txt
 
 target_classes/
 target_test-classes/
+
+hu01-rojo.txt
+hu01-verde.txt
+*-rojo.txt
+*-verde.txt
