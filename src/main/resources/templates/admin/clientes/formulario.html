@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Nuevo cliente | Veterinaria</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+
+<header class="barra">
+    <span class="marca">Veterinaria</span>
+    <form th:action="@{/logout}" method="post" class="en-linea">
+        <button type="submit" class="boton-enlace">Cerrar sesion</button>
+    </form>
+</header>
+
+<div class="disposicion">
+
+    <nav class="menu">
+        <p class="grupo">Maestros</p>
+        <a th:href="@{/admin/clientes}" class="activo">Clientes</a>
+        <a th:href="@{/admin/veterinarios}">Veterinarios</a>
+        <a th:href="@{/admin/mascotas}">Mascotas</a>
+        <a th:href="@{/admin/servicios}">Servicios</a>
+        <a th:href="@{/admin/productos}">Productos</a>
+
+        <p class="grupo">Transaccional</p>
+        <a th:href="@{/admin/citas}">Reservas de citas</a>
+
+        <p class="grupo">Reportes</p>
+        <a th:href="@{/admin/reportes/citas}">Citas e ingresos</a>
+        <a th:href="@{/admin/reportes/historias}">Historias clinicas</a>
+    </nav>
+
+    <main class="contenido">
+        <h1>Nuevo cliente</h1>
+
+        <form th:action="@{/admin/clientes}" th:object="${clienteForm}" method="post" class="formulario">
+
+            <div class="campo">
+                <label for="nombre">Nombre completo</label>
+                <input type="text" id="nombre" th:field="*{nombre}">
+                <span class="error" th:if="${#fields.hasErrors('nombre')}"
+                      th:errors="*{nombre}">error</span>
+            </div>
+
+            <div class="campo">
+                <label for="documento">Numero de documento</label>
+                <input type="text" id="documento" th:field="*{documento}">
+                <span class="error" th:if="${#fields.hasErrors('documento')}"
+                      th:errors="*{documento}">error</span>
+            </div>
+
+            <div class="campo">
+                <label for="correo">Correo electronico</label>
+                <input type="email" id="correo" th:field="*{correo}">
+                <span class="error" th:if="${#fields.hasErrors('correo')}"
+                      th:errors="*{correo}">error</span>
+            </div>
+
+            <div class="campo">
+                <label for="telefono">Telefono</label>
+                <input type="text" id="telefono" th:field="*{telefono}">
+                <span class="error" th:if="${#fields.hasErrors('telefono')}"
+                      th:errors="*{telefono}">error</span>
+            </div>
+
+            <div class="campo">
+                <label for="direccion">Direccion</label>
+                <input type="text" id="direccion" th:field="*{direccion}">
+                <span class="error" th:if="${#fields.hasErrors('direccion')}"
+                      th:errors="*{direccion}">error</span>
+            </div>
+
+            <div class="campo">
+                <label for="ciudad">Ciudad</label>
+                <input type="text" id="ciudad" th:field="*{ciudad}">
+                <span class="error" th:if="${#fields.hasErrors('ciudad')}"
+                      th:errors="*{ciudad}">error</span>
+            </div>
+
+            <div class="acciones">
+                <button type="submit">Guardar</button>
+                <a th:href="@{/admin/clientes}" class="boton-enlace">Cancelar</a>
+            </div>
+        </form>
+    </main>
+</div>
+
+</body>
+</html>
