@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Clientes | Veterinaria</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+
+<header class="barra">
+    <span class="marca">Veterinaria</span>
+    <form th:action="@{/logout}" method="post" class="en-linea">
+        <button type="submit" class="boton-enlace">Cerrar sesion</button>
+    </form>
+</header>
+
+<div class="disposicion">
+
+    <nav class="menu">
+        <p class="grupo">Maestros</p>
+        <a th:href="@{/admin/clientes}" class="activo">Clientes</a>
+        <a th:href="@{/admin/veterinarios}">Veterinarios</a>
+        <a th:href="@{/admin/mascotas}">Mascotas</a>
+        <a th:href="@{/admin/servicios}">Servicios</a>
+        <a th:href="@{/admin/productos}">Productos</a>
+
+        <p class="grupo">Transaccional</p>
+        <a th:href="@{/admin/citas}">Reservas de citas</a>
+
+        <p class="grupo">Reportes</p>
+        <a th:href="@{/admin/reportes/citas}">Citas e ingresos</a>
+        <a th:href="@{/admin/reportes/historias}">Historias clinicas</a>
+    </nav>
+
+    <main class="contenido">
+
+        <div class="encabezado-seccion">
+            <h1>Clientes</h1>
+            <a th:href="@{/admin/clientes/nuevo}" class="boton">Nuevo cliente</a>
+        </div>
+
+        <!-- Clave temporal generada al registrar (HU-01 CA5) -->
+        <div class="alerta alerta-exito" th:if="${passwordTemporal}">
+            <p th:text="${mensajeExito}">Cliente registrado.</p>
+            <p>
+                Contrasena temporal para
+                <strong th:text="${correoNuevo}">correo</strong>:
+                <code th:text="${passwordTemporal}">clave</code>
+            </p>
+            <p class="menor">Entregala al cliente. Se le pedira cambiarla en su primer ingreso.</p>
+        </div>
+
+        <form th:action="@{/admin/clientes}" method="get" class="barra-busqueda">
+            <input type="text" name="buscar" th:value="${buscar}"
+                   placeholder="Buscar por nombre o documento">
+            <button type="submit">Buscar</button>
+            <a th:href="@{/admin/clientes}" class="boton-enlace" th:if="${buscar != ''}">Limpiar</a>
+        </form>
+
+        <table class="tabla" th:if="${!clientes.isEmpty()}">
+            <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Documento</th>
+                <th>Correo</th>
+                <th>Telefono</th>
+                <th>Ciudad</th>
+                <th>Estado</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="c : ${clientes}">
+                <td th:text="${c.nombre}">Nombre</td>
+                <td th:text="${c.documento}">Documento</td>
+                <td th:text="${c.correo}">Correo</td>
+                <td th:text="${c.telefono}">Telefono</td>
+                <td th:text="${c.ciudad}">Ciudad</td>
+                <td>
+                    <span class="etiqueta"
+                          th:classappend="${c.estado.name() == 'ACTIVO'} ? 'etiqueta-activa' : 'etiqueta-inactiva'"
+                          th:text="${c.estado}">Estado</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <p class="vacio" th:if="${clientes.isEmpty()}">
+            No se encontraron clientes.
+        </p>
+
+    </main>
+</div>
+
+</body>
+</html>

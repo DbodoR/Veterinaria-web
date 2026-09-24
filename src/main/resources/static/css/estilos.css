@@ -126,3 +126,142 @@ button {
 
 .rotulo { margin: 0; color: var(--suave); font-size: .82rem; }
 .cifra { margin: .35rem 0 0; font-size: 2rem; font-weight: 700; }
+
+/* ============================================================
+   Estilos de los maestros. Pegar al final de estilos.css
+   ============================================================ */
+
+.encabezado-seccion {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.encabezado-seccion h1 { margin: 0; }
+
+.boton {
+    display: inline-block;
+    padding: .6rem 1.1rem;
+    background: var(--acento);
+    color: #fff;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: .92rem;
+}
+
+.menu a.activo {
+    background: var(--fondo);
+    color: var(--acento);
+    font-weight: 600;
+    border-left: 3px solid var(--acento);
+}
+
+/* ---------- Busqueda ---------- */
+.barra-busqueda {
+    display: flex;
+    gap: .6rem;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.barra-busqueda input {
+    width: 320px;
+    margin: 0;
+    padding: .55rem .75rem;
+}
+
+.barra-busqueda button {
+    margin: 0;
+    width: auto;
+    padding: .55rem 1.1rem;
+}
+
+/* ---------- Tabla ---------- */
+.tabla {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border: 1px solid var(--linea);
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: .92rem;
+}
+
+.tabla th {
+    text-align: left;
+    padding: .75rem 1rem;
+    background: var(--fondo);
+    border-bottom: 1px solid var(--linea);
+    font-size: .8rem;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: var(--suave);
+}
+
+.tabla td {
+    padding: .75rem 1rem;
+    border-bottom: 1px solid var(--linea);
+}
+
+.tabla tbody tr:last-child td { border-bottom: 0; }
+.tabla tbody tr:hover { background: var(--fondo); }
+
+.etiqueta {
+    display: inline-block;
+    padding: .2rem .6rem;
+    border-radius: 999px;
+    font-size: .75rem;
+    font-weight: 600;
+}
+
+.etiqueta-activa   { background: #e8f5ec; color: var(--exito); }
+.etiqueta-inactiva { background: #f0f2f4; color: var(--suave); }
+
+.vacio {
+    padding: 2.5rem;
+    text-align: center;
+    color: var(--suave);
+    background: #fff;
+    border: 1px dashed var(--linea);
+    border-radius: 8px;
+}
+
+/* ---------- Formulario ---------- */
+.formulario {
+    background: #fff;
+    border: 1px solid var(--linea);
+    border-radius: 8px;
+    padding: 1.75rem 2rem;
+    max-width: 560px;
+}
+
+.campo { margin-bottom: 1.1rem; }
+.campo label { margin-top: 0; }
+
+.error {
+    display: block;
+    margin-top: .3rem;
+    color: var(--error);
+    font-size: .82rem;
+}
+
+.acciones {
+    display: flex;
+    gap: .8rem;
+    align-items: center;
+    margin-top: 1.75rem;
+}
+
+.acciones button { margin: 0; width: auto; padding: .65rem 1.6rem; }
+
+.alerta code {
+    background: #fff;
+    padding: .2rem .5rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    letter-spacing: .05em;
+}
+
+.alerta p { margin: .3rem 0; }
+.menor { font-size: .82rem; opacity: .85; }
