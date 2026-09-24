@@ -1,0 +1,10 @@
+target/
+target_classes/
+target_test-classes/
+evidencias/
+rojo.txt
+verde.txt
+*.docx
+.git/
+.idea/
+.vscode/
