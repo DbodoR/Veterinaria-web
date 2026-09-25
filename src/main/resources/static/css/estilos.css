@@ -264,7 +264,7 @@ button {
 .alerta p { margin: .3rem 0; }
 .menor { font-size: .82rem; opacity: .85; }
 
-/*Añadidos de HU-06 */
+/*HU-06 */
 
 .subtitulo-seccion {
     margin: 1.75rem 0 .5rem;
@@ -289,4 +289,24 @@ button {
     font-size: 1rem;
     background: #fff;
     color: var(--tinta);
+}
+
+/*HU-16*/
+
+.campo-casilla { margin: 1.25rem 0; }
+
+.campo-casilla label {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    margin: 0;
+    font-weight: 400;
+    font-size: .92rem;
+    cursor: pointer;
+}
+
+.campo-casilla input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+    accent-color: var(--acento);
 }
