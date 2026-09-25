@@ -1,7 +1,7 @@
 package com.dbodor.veterinariaweb.auth;
 
-import com.dbodor.veterinariaweb.model.EstadoUsuario;
-import com.dbodor.veterinariaweb.model.RolUsuario;
+import com.dbodor.veterinariaweb.enums.EstadoUsuario;
+import com.dbodor.veterinariaweb.enums.RolUsuario;
 import com.dbodor.veterinariaweb.model.Usuario;
 import com.dbodor.veterinariaweb.repository.UsuarioRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +20,6 @@ import static org.springframework.security.test.web.servlet.response.SecurityMoc
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**

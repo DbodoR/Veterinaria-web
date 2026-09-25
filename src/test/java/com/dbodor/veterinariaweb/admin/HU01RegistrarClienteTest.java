@@ -1,7 +1,7 @@
 package com.dbodor.veterinariaweb.admin;
 
-import com.dbodor.veterinariaweb.model.EstadoUsuario;
-import com.dbodor.veterinariaweb.model.RolUsuario;
+import com.dbodor.veterinariaweb.enums.EstadoUsuario;
+import com.dbodor.veterinariaweb.enums.RolUsuario;
 import com.dbodor.veterinariaweb.model.Usuario;
 import com.dbodor.veterinariaweb.repository.UsuarioRepository;
 import org.junit.jupiter.api.BeforeEach;

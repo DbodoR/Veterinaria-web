@@ -33,6 +33,8 @@ public class Mascota {
     private String sexo;
     @Column(name = "peso_kg")
     private Double pesoKg;
+
+
     private String estado;
 
 }

@@ -1,4 +1,4 @@
-package com.dbodor.veterinariaweb.model;
+package com.dbodor.veterinariaweb.enums;
 
 /**
  * Estado de la cuenta. HU-04 exige baja logica: el cliente se
