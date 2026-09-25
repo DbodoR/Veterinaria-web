@@ -79,4 +79,15 @@ public class CitaServiceImpl implements CitaService {
         return citaRepository.save(cita);
     }
 
+    @Override
+    public Double calcularTotalIngresos() {
+        List<Cita> citasAtendidas = citaRepository.findByEstado("ATENDIDA");
+
+        return citasAtendidas.stream()
+                .map(Cita::getCostoTotal)
+                .filter(costo -> costo != null)
+                .mapToDouble(Double::doubleValue)
+                .sum();
+    }
+
 }

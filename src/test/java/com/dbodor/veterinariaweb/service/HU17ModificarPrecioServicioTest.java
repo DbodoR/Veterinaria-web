@@ -20,8 +20,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -76,6 +75,36 @@ public class HU17ModificarPrecioServicioTest {
         assertNotNull(citaAgendada.getCostoTotal(), "El costo total de la nueva cita no debe ser nulo");
         assertEquals(60000.0, citaAgendada.getCostoTotal(),
                 "La nueva cita debe registrarse con la tarifa vigente de 60000.0");
+    }
+
+    @Test
+    @DisplayName("Criterio 2: Modificar el precio del servicio no altera el costoTotal de citas ya atendidas")
+    void actualizarPrecio_citasAtendidasConservanPrecioHistorico() {
+        Servicio servicio = new Servicio();
+        servicio.setIdServicio(1L);
+        servicio.setNombre("Desparasitación");
+        servicio.setDuracionMinutos(15);
+        servicio.setPrecioBase(40000.0);
+        servicio.setEstado(EstadoServicio.ACTIVO);
+
+        Cita citaAtendida = new Cita();
+        citaAtendida.setIdCita(50L);
+        citaAtendida.setServicio(servicio);
+        citaAtendida.setFechaCita(LocalDate.of(2026, 8, 10));
+        citaAtendida.setHoraCita(LocalTime.of(14, 0));
+        citaAtendida.setEstado("ATENDIDA");
+        citaAtendida.setCostoTotal(40000.0);
+
+        when(servicioRepository.findById(1L)).thenReturn(Optional.of(servicio));
+        when(servicioRepository.save(any(Servicio.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        Servicio servicioModificado = servicioService.actualizarPrecio(1L, 55000.0);
+
+        assertEquals(55000.0, servicioModificado.getPrecioBase(), "El catálogo de servicios debe reflejar 55000.0");
+        assertEquals(40000.0, citaAtendida.getCostoTotal(),
+                "El costoTotal registrado en la cita atendida debe permanecer inalterado en 40000.0");
+        assertNotEquals(servicioModificado.getPrecioBase(), citaAtendida.getCostoTotal(),
+                "El costo histórico de la cita no debe igualarse al nuevo precio de catálogo");
     }
 
 }

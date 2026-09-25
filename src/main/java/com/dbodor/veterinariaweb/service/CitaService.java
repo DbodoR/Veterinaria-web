@@ -6,4 +6,5 @@ import com.dbodor.veterinariaweb.model.DetalleRecetaCita;
 public interface CitaService{
     DetalleRecetaCita finalizarCita(Long idCita);
     Cita agendarCita(Cita cita);
+    Double calcularTotalIngresos();
 }
