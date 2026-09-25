@@ -9,6 +9,8 @@ import com.dbodor.veterinariaweb.service.CitaService;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class CitaServiceImpl implements CitaService {
 
@@ -54,6 +56,10 @@ public class CitaServiceImpl implements CitaService {
             throw new IllegalArgumentException("La cita debe tener un servicio con duración válida");
         }
 
+        if (cita.getCostoTotal() == null) {
+            cita.setCostoTotal(cita.getServicio().getPrecioBase());
+        }
+
         LocalTime inicioNueva = cita.getHoraCita();
         LocalTime finNueva = inicioNueva.plusMinutes(cita.getServicio().getDuracionMinutos());
 
@@ -73,6 +79,18 @@ public class CitaServiceImpl implements CitaService {
         }
 
         return citaRepository.save(cita);
+    }
+
+    @Override
+    public Map<String, Double> obtenerReporteIngresosPorServicio() {
+        List<Cita> citasAtendidas = citaRepository.findByEstado("ATENDIDA");
+
+        return citasAtendidas.stream()
+                .filter(c -> c.getServicio() != null && c.getCostoTotal() != null)
+                .collect(Collectors.groupingBy(
+                        c -> c.getServicio().getNombre(),
+                        Collectors.summingDouble(Cita::getCostoTotal)
+                ));
     }
 
 }
