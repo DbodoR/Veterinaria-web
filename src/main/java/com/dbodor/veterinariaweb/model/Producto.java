@@ -1,5 +1,6 @@
 package com.dbodor.veterinariaweb.model;
 
+import com.dbodor.veterinariaweb.enums.EstadoProducto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,6 +29,8 @@ public class Producto {
 
     @Column(name = "es_recetable_veterinario")
     private Boolean esRecetableVeterinario;
-    private String estado;
+
+    @Enumerated(EnumType.STRING)
+    private EstadoProducto estado;
 
 }

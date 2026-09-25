@@ -1,4 +1,4 @@
-package com.dbodor.veterinariaweb.model;
+package com.dbodor.veterinariaweb.enums;
 
 /**
  * Roles del sistema. Son los tres que define HU-02:
