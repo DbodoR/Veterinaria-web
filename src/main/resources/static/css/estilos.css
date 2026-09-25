@@ -290,3 +290,25 @@ button {
     background: #fff;
     color: var(--tinta);
 }
+
+/* ============================================================
+   Añadidos de HU-16. Pegar al final de estilos.css
+   ============================================================ */
+
+.campo-casilla { margin: 1.25rem 0; }
+
+.campo-casilla label {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    margin: 0;
+    font-weight: 400;
+    font-size: .92rem;
+    cursor: pointer;
+}
+
+.campo-casilla input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+    accent-color: var(--acento);
+}

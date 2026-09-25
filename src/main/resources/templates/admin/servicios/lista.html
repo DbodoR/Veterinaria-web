@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Servicios | Veterinaria</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+
+<header class="barra">
+    <span class="marca">Veterinaria</span>
+    <form th:action="@{/logout}" method="post" class="en-linea">
+        <button type="submit" class="boton-enlace">Cerrar sesion</button>
+    </form>
+</header>
+
+<div class="disposicion">
+
+    <nav class="menu">
+        <p class="grupo">Maestros</p>
+        <a th:href="@{/admin/clientes}">Clientes</a>
+        <a th:href="@{/admin/veterinarios}">Veterinarios</a>
+        <a th:href="@{/admin/mascotas}">Mascotas</a>
+        <a th:href="@{/admin/servicios}" class="activo">Servicios</a>
+        <a th:href="@{/admin/productos}">Productos</a>
+
+        <p class="grupo">Transaccional</p>
+        <a th:href="@{/admin/citas}">Reservas de citas</a>
+
+        <p class="grupo">Reportes</p>
+        <a th:href="@{/admin/reportes/citas}">Citas e ingresos</a>
+        <a th:href="@{/admin/reportes/historias}">Historias clinicas</a>
+    </nav>
+
+    <main class="contenido">
+
+        <div class="encabezado-seccion">
+            <h1>Servicios</h1>
+            <a th:href="@{/admin/servicios/nuevo}" class="boton">Nuevo servicio</a>
+        </div>
+
+        <div class="alerta alerta-exito" th:if="${mensajeExito}" th:text="${mensajeExito}"></div>
+
+        <form th:action="@{/admin/servicios}" method="get" class="barra-busqueda">
+            <input type="text" name="buscar" th:value="${buscar}"
+                   placeholder="Buscar por nombre o descripcion">
+            <button type="submit">Buscar</button>
+            <a th:href="@{/admin/servicios}" class="boton-enlace" th:if="${buscar != ''}">Limpiar</a>
+        </form>
+
+        <table class="tabla" th:if="${!servicios.isEmpty()}">
+            <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Descripcion</th>
+                <th>Duracion</th>
+                <th>Precio</th>
+                <th>Consulta</th>
+                <th>Estado</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="s : ${servicios}">
+                <td th:text="${s.nombre}">Nombre</td>
+                <td th:text="${s.descripcion}">Descripcion</td>
+                <td th:text="${s.duracionMinutos} + ' min'">30 min</td>
+                <td th:text="'$' + ${#numbers.formatDecimal(s.precioBase, 0, 'POINT', 0, 'DEFAULT')}">Precio</td>
+                <td th:text="${s.esConsultaVeterinaria} ? 'Si' : 'No'">No</td>
+                <td>
+                    <span class="etiqueta"
+                          th:classappend="${s.estaActivo()} ? 'etiqueta-activa' : 'etiqueta-inactiva'"
+                          th:text="${s.estado}">Estado</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <p class="vacio" th:if="${servicios.isEmpty()}">
+            No se encontraron servicios.
+        </p>
+
+    </main>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Nuevo servicio | Veterinaria</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+
+<header class="barra">
+    <span class="marca">Veterinaria</span>
+    <form th:action="@{/logout}" method="post" class="en-linea">
+        <button type="submit" class="boton-enlace">Cerrar sesion</button>
+    </form>
+</header>
+
+<div class="disposicion">
+
+    <nav class="menu">
+        <p class="grupo">Maestros</p>
+        <a th:href="@{/admin/clientes}">Clientes</a>
+        <a th:href="@{/admin/veterinarios}">Veterinarios</a>
+        <a th:href="@{/admin/mascotas}">Mascotas</a>
+        <a th:href="@{/admin/servicios}" class="activo">Servicios</a>
+        <a th:href="@{/admin/productos}">Productos</a>
+
+        <p class="grupo">Transaccional</p>
+        <a th:href="@{/admin/citas}">Reservas de citas</a>
+
+        <p class="grupo">Reportes</p>
+        <a th:href="@{/admin/reportes/citas}">Citas e ingresos</a>
+        <a th:href="@{/admin/reportes/historias}">Historias clinicas</a>
+    </nav>
+
+    <main class="contenido">
+        <h1>Nuevo servicio</h1>
+
+        <form th:action="@{/admin/servicios}" th:object="${servicioForm}" method="post" class="formulario">
+
+            <div class="campo">
+                <label for="nombre">Nombre del servicio</label>
+                <input type="text" id="nombre" th:field="*{nombre}">
+                <span class="error" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}">error</span>
+            </div>
+
+            <div class="campo">
+                <label for="descripcion">Descripcion</label>
+                <input type="text" id="descripcion" th:field="*{descripcion}">
+                <span class="error" th:if="${#fields.hasErrors('descripcion')}"
+                      th:errors="*{descripcion}">error</span>
+            </div>
+
+            <div class="fila">
+                <div class="campo">
+                    <label for="duracionMinutos">Duracion (minutos)</label>
+                    <input type="number" id="duracionMinutos" step="15" min="15" max="180"
+                           th:field="*{duracionMinutos}">
+                    <span class="error" th:if="${#fields.hasErrors('duracionMinutos')}"
+                          th:errors="*{duracionMinutos}">error</span>
+                    <span class="error" th:if="${#fields.hasErrors('duracionEnBloquesValidos')}"
+                          th:errors="*{duracionEnBloquesValidos}">error</span>
+                </div>
+                <div class="campo">
+                    <label for="precioBase">Precio</label>
+                    <input type="number" id="precioBase" step="0.01" min="0.01" th:field="*{precioBase}">
+                    <span class="error" th:if="${#fields.hasErrors('precioBase')}"
+                          th:errors="*{precioBase}">error</span>
+                </div>
+            </div>
+            <p class="menor">La duracion debe ser multiplo de 15 minutos, entre 15 y 180.</p>
+
+            <div class="campo campo-casilla">
+                <label>
+                    <input type="checkbox" th:field="*{esConsultaVeterinaria}">
+                    Es una consulta veterinaria (genera historia clinica)
+                </label>
+            </div>
+
+            <div class="acciones">
+                <button type="submit">Guardar</button>
+                <a th:href="@{/admin/servicios}" class="boton-enlace">Cancelar</a>
+            </div>
+        </form>
+    </main>
+</div>
+
+</body>
+</html>
