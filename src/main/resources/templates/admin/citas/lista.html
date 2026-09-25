@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reservas de citas | Veterinaria</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+
+<header class="barra">
+    <span class="marca">Veterinaria</span>
+    <form th:action="@{/logout}" method="post" class="en-linea">
+        <button type="submit" class="boton-enlace">Cerrar sesion</button>
+    </form>
+</header>
+
+<div class="disposicion">
+
+    <nav class="menu">
+        <p class="grupo">Maestros</p>
+        <a th:href="@{/admin/clientes}">Clientes</a>
+        <a th:href="@{/admin/veterinarios}">Veterinarios</a>
+        <a th:href="@{/admin/mascotas}">Mascotas</a>
+        <a th:href="@{/admin/servicios}">Servicios</a>
+        <a th:href="@{/admin/productos}">Productos</a>
+
+        <p class="grupo">Transaccional</p>
+        <a th:href="@{/admin/citas}" class="activo">Reservas de citas</a>
+
+        <p class="grupo">Reportes</p>
+        <a th:href="@{/admin/reportes/citas}">Citas e ingresos</a>
+        <a th:href="@{/admin/reportes/historias}">Historias clinicas</a>
+    </nav>
+
+    <main class="contenido">
+
+        <div class="encabezado-seccion">
+            <h1>Reservas de citas</h1>
+            <a th:href="@{/admin/citas/nueva}" class="boton">Agendar cita</a>
+        </div>
+
+        <div class="alerta alerta-exito" th:if="${mensajeExito}" th:text="${mensajeExito}"></div>
+
+        <table class="tabla" th:if="${!citas.isEmpty()}">
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Cliente</th>
+                <th>Mascota</th>
+                <th>Servicio</th>
+                <th>Veterinario</th>
+                <th>Valor</th>
+                <th>Estado</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="c : ${citas}">
+                <td th:text="${c.fechaCita}">2026-10-01</td>
+                <td th:text="${c.horaCita}">09:00</td>
+                <td th:text="${c.mascota.usuario.nombre}">Cliente</td>
+                <td th:text="${c.mascota.nombre}">Mascota</td>
+                <td th:text="${c.servicio.nombre}">Servicio</td>
+                <td th:text="${c.veterinario.nombre}">Veterinario</td>
+                <td th:text="'$' + ${#numbers.formatDecimal(c.costoTotal, 0, 'POINT', 0, 'DEFAULT')}">Valor</td>
+                <td>
+                    <span class="etiqueta"
+                          th:classappend="${c.estado == 'CANCELADA'} ? 'etiqueta-inactiva' : 'etiqueta-activa'"
+                          th:text="${c.estado}">Estado</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <p class="vacio" th:if="${citas.isEmpty()}">
+            Todavia no hay citas agendadas.
+        </p>
+
+    </main>
+</div>
+
+</body>
+</html>
