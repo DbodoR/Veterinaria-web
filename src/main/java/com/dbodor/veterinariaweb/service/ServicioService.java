@@ -28,4 +28,13 @@ public interface ServicioService {
 
     /** HU-16: alta desde el formulario del maestro. */
     Servicio crear(ServicioForm form);
+
+    /** HU-17: cambia el precio base de un servicio existente. */
+    Servicio actualizarPrecio(Long idServicio, Double nuevoPrecio);
+
+    /** HU-18: desactiva sin confirmacion; falla si hay citas pendientes. */
+    Servicio desactivarServicio(Long idServicio);
+
+    /** HU-18: desactiva, permitiendo forzarlo con confirmacion explicita. */
+    Servicio desactivarServicio(Long idServicio, boolean confirmacion);
 }

@@ -1,5 +1,6 @@
 package com.dbodor.veterinariaweb.model;
 
+import com.dbodor.veterinariaweb.enums.EstadoUsuario;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import com.dbodor.veterinariaweb.enums.EstadoUsuario;
