@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -89,8 +90,8 @@ public class HU18DesactivarServicioTest {
     }
 
     @Test
-    @DisplayName("Criterio 3: Las citas de servicios inactivos continúan sumando al reporte de ingresos")
-    void calcularTotalIngresos_servicioInactivo_sigueSumandoEnHistorico() {
+    @DisplayName("Criterio 3: El reporte desglosado incluye ingresos de servicios inactivos en el histórico")
+    void obtenerReporteIngresosPorServicio_incluyeServiciosInactivos() {
         Servicio servicioInactivo = new Servicio();
         servicioInactivo.setIdServicio(1L);
         servicioInactivo.setNombre("Ecografía Básica");
@@ -101,28 +102,24 @@ public class HU18DesactivarServicioTest {
         servicioActivo.setNombre("Consulta General");
         servicioActivo.setEstado(EstadoServicio.ACTIVO);
 
-        // Cita histórica del servicio que fue desactivado
-        Cita citaServicioInactivo = new Cita();
-        citaServicioInactivo.setIdCita(10L);
-        citaServicioInactivo.setServicio(servicioInactivo);
-        citaServicioInactivo.setEstado("ATENDIDA");
-        citaServicioInactivo.setCostoTotal(80000.0);
+        Cita cita1 = new Cita();
+        cita1.setServicio(servicioInactivo);
+        cita1.setEstado("ATENDIDA");
+        cita1.setCostoTotal(80000.0);
 
-        // Cita histórica de un servicio activo
-        Cita citaServicioActivo = new Cita();
-        citaServicioActivo.setIdCita(11L);
-        citaServicioActivo.setServicio(servicioActivo);
-        citaServicioActivo.setEstado("ATENDIDA");
-        citaServicioActivo.setCostoTotal(50000.0);
+        Cita cita2 = new Cita();
+        cita2.setServicio(servicioActivo);
+        cita2.setEstado("ATENDIDA");
+        cita2.setCostoTotal(50000.0);
 
-        when(citaRepository.findByEstado("ATENDIDA"))
-                .thenReturn(List.of(citaServicioInactivo, citaServicioActivo));
+        when(citaRepository.findByEstado("ATENDIDA")).thenReturn(List.of(cita1, cita2));
 
-        Double totalIngresos = citaService.calcularTotalIngresos();
+        Map<String, Double> reporte = citaService.obtenerReporteIngresosPorServicio();
 
-        assertNotNull(totalIngresos, "El total de ingresos no debe ser nulo");
-        assertEquals(130000.0, totalIngresos,
-                "El reporte debe incluir los ingresos de citas de servicios inactivos (80000 + 50000)");
+        assertNotNull(reporte);
+        assertEquals(2, reporte.size(), "El reporte debe incluir tanto servicios activos como inactivos");
+        assertEquals(80000.0, reporte.get("Ecografía Básica"), "El servicio inactivo debe registrar 80000.0");
+        assertEquals(50000.0, reporte.get("Consulta General"), "El servicio activo debe registrar 50000.0");
     }
 
 }

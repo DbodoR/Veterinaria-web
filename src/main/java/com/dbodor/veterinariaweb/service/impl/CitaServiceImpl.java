@@ -9,6 +9,8 @@ import com.dbodor.veterinariaweb.service.CitaService;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class CitaServiceImpl implements CitaService {
 
@@ -80,14 +82,15 @@ public class CitaServiceImpl implements CitaService {
     }
 
     @Override
-    public Double calcularTotalIngresos() {
+    public Map<String, Double> obtenerReporteIngresosPorServicio() {
         List<Cita> citasAtendidas = citaRepository.findByEstado("ATENDIDA");
 
         return citasAtendidas.stream()
-                .map(Cita::getCostoTotal)
-                .filter(costo -> costo != null)
-                .mapToDouble(Double::doubleValue)
-                .sum();
+                .filter(c -> c.getServicio() != null && c.getCostoTotal() != null)
+                .collect(Collectors.groupingBy(
+                        c -> c.getServicio().getNombre(),
+                        Collectors.summingDouble(Cita::getCostoTotal)
+                ));
     }
 
 }
