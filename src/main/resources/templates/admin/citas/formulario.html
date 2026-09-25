@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Agendar cita | Veterinaria</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+
+<header class="barra">
+    <span class="marca">Veterinaria</span>
+    <form th:action="@{/logout}" method="post" class="en-linea">
+        <button type="submit" class="boton-enlace">Cerrar sesion</button>
+    </form>
+</header>
+
+<div class="disposicion">
+
+    <nav class="menu">
+        <p class="grupo">Maestros</p>
+        <a th:href="@{/admin/clientes}">Clientes</a>
+        <a th:href="@{/admin/veterinarios}">Veterinarios</a>
+        <a th:href="@{/admin/mascotas}">Mascotas</a>
+        <a th:href="@{/admin/servicios}">Servicios</a>
+        <a th:href="@{/admin/productos}">Productos</a>
+
+        <p class="grupo">Transaccional</p>
+        <a th:href="@{/admin/citas}" class="activo">Reservas de citas</a>
+
+        <p class="grupo">Reportes</p>
+        <a th:href="@{/admin/reportes/citas}">Citas e ingresos</a>
+        <a th:href="@{/admin/reportes/historias}">Historias clinicas</a>
+    </nav>
+
+    <main class="contenido">
+        <h1>Agendar cita</h1>
+
+        <div class="alerta alerta-error" th:if="${error}" th:text="${error}"></div>
+
+        <!-- Paso 1: el cliente. Al cambiarlo, la pantalla se recarga con sus mascotas. -->
+        <form th:action="@{/admin/citas/nueva}" method="get" class="formulario">
+            <div class="campo">
+                <label for="idCliente">Cliente</label>
+                <select id="idCliente" name="idCliente" onchange="this.form.submit()">
+                    <option value="">Seleccione un cliente</option>
+                    <option th:each="cl : ${clientes}"
+                            th:value="${cl.idUsuario}"
+                            th:text="${cl.nombre} + ' - ' + ${cl.documento}"
+                            th:selected="${cl.idUsuario == citaForm.idCliente}">Cliente</option>
+                </select>
+            </div>
+            <noscript><button type="submit">Cargar mascotas</button></noscript>
+        </form>
+
+        <!-- Paso 2: los datos de la cita. -->
+        <form th:action="@{/admin/citas}" th:object="${citaForm}" method="post" class="formulario"
+              th:if="${citaForm.idCliente != null}">
+
+            <input type="hidden" th:field="*{idCliente}">
+
+            <div class="campo">
+                <label for="idMascota">Mascota</label>
+                <select id="idMascota" th:field="*{idMascota}">
+                    <option value="">Seleccione la mascota</option>
+                    <option th:each="m : ${mascotas}" th:value="${m.idMascota}"
+                            th:text="${m.nombre} + ' (' + ${m.especie} + ')'">Mascota</option>
+                </select>
+                <span class="error" th:if="${#fields.hasErrors('idMascota')}" th:errors="*{idMascota}">error</span>
+                <p class="menor" th:if="${mascotas.isEmpty()}">Este cliente no tiene mascotas activas.</p>
+            </div>
+
+            <div class="campo">
+                <label for="idServicio">Servicio</label>
+                <select id="idServicio" th:field="*{idServicio}">
+                    <option value="">Seleccione el servicio</option>
+                    <option th:each="s : ${servicios}" th:value="${s.idServicio}"
+                            th:text="${s.nombre} + ' - ' + ${s.duracionMinutos} + ' min - $'
+                                     + ${#numbers.formatDecimal(s.precioBase, 0, 'POINT', 0, 'DEFAULT')}">Servicio</option>
+                </select>
+                <span class="error" th:if="${#fields.hasErrors('idServicio')}" th:errors="*{idServicio}">error</span>
+            </div>
+
+            <div class="campo">
+                <label for="idVeterinario">Veterinario</label>
+                <select id="idVeterinario" th:field="*{idVeterinario}">
+                    <option value="">Seleccione el veterinario</option>
+                    <option th:each="v : ${veterinarios}" th:value="${v.idVeterinario}"
+                            th:text="${v.nombre} + ' - ' + ${v.especialidad} + ' - ' + ${v.horaInicio} + ' a '
+                                     + ${v.horaFin} + ' - tarifa $'
+                                     + ${#numbers.formatDecimal(v.tarifa, 0, 'POINT', 0, 'DEFAULT')}">Veterinario</option>
+                </select>
+                <span class="error" th:if="${#fields.hasErrors('idVeterinario')}" th:errors="*{idVeterinario}">error</span>
+            </div>
+
+            <div class="fila">
+                <div class="campo">
+                    <label for="fecha">Fecha</label>
+                    <input type="date" id="fecha" th:field="*{fecha}">
+                    <span class="error" th:if="${#fields.hasErrors('fecha')}" th:errors="*{fecha}">error</span>
+                </div>
+                <div class="campo">
+                    <label for="hora">Hora</label>
+                    <input type="time" id="hora" step="900" th:field="*{hora}">
+                    <span class="error" th:if="${#fields.hasErrors('hora')}" th:errors="*{hora}">error</span>
+                </div>
+            </div>
+            <p class="menor">El valor de la cita es el precio del servicio mas la tarifa del veterinario.</p>
+
+            <div class="acciones">
+                <button type="submit">Agendar</button>
+                <a th:href="@{/admin/citas}" class="boton-enlace">Cancelar</a>
+            </div>
+        </form>
+    </main>
+</div>
+
+</body>
+</html>

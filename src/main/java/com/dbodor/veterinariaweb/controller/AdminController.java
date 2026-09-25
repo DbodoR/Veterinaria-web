@@ -30,7 +30,7 @@ public class AdminController {
     @GetMapping
     public String panel(Model model) {
         model.addAttribute("citasHoy", citaRepository.countByFechaCita(LocalDate.now()));
-        model.addAttribute("citasPendientes", citaRepository.countByEstado("PENDIENTE"));
+        model.addAttribute("citasPendientes", citaRepository.countByEstado("PROGRAMADA"));
         model.addAttribute("clientesActivos",
                 usuarioRepository.countByRolAndEstado(RolUsuario.CLIENTE, EstadoUsuario.ACTIVO));
         return "admin/panel";
