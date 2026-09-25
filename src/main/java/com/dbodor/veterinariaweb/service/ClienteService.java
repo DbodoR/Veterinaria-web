@@ -1,8 +1,8 @@
 package com.dbodor.veterinariaweb.service;
 
 import com.dbodor.veterinariaweb.dto.ClienteForm;
-import com.dbodor.veterinariaweb.model.EstadoUsuario;
-import com.dbodor.veterinariaweb.model.RolUsuario;
+import com.dbodor.veterinariaweb.enums.EstadoUsuario;
+import com.dbodor.veterinariaweb.enums.RolUsuario;
 import com.dbodor.veterinariaweb.model.Usuario;
 import com.dbodor.veterinariaweb.repository.UsuarioRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;

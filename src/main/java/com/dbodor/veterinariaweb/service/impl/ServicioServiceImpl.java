@@ -40,4 +40,9 @@ public class ServicioServiceImpl implements ServicioService {
 
         return servicioRepository.save(servicio);
     }
+
+    @Override
+    public Servicio actualizarPrecio(Long idServicio, Double nuevoPrecio) {
+        return null;
+    }
 }

@@ -1,8 +1,8 @@
 package com.dbodor.veterinariaweb.service;
 
 import com.dbodor.veterinariaweb.dto.VeterinarioForm;
-import com.dbodor.veterinariaweb.model.EstadoUsuario;
-import com.dbodor.veterinariaweb.model.RolUsuario;
+import com.dbodor.veterinariaweb.enums.EstadoUsuario;
+import com.dbodor.veterinariaweb.enums.RolUsuario;
 import com.dbodor.veterinariaweb.model.Usuario;
 import com.dbodor.veterinariaweb.model.Veterinario;
 import com.dbodor.veterinariaweb.repository.UsuarioRepository;

@@ -54,6 +54,10 @@ public class CitaServiceImpl implements CitaService {
             throw new IllegalArgumentException("La cita debe tener un servicio con duración válida");
         }
 
+        if (cita.getCostoTotal() == null) {
+            cita.setCostoTotal(cita.getServicio().getPrecioBase());
+        }
+
         LocalTime inicioNueva = cita.getHoraCita();
         LocalTime finNueva = inicioNueva.plusMinutes(cita.getServicio().getDuracionMinutos());
 
