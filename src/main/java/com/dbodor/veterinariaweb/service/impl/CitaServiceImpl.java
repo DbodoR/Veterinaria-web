@@ -7,6 +7,9 @@ import com.dbodor.veterinariaweb.repository.CitaRepository;
 import com.dbodor.veterinariaweb.repository.ProductoRepository;
 import com.dbodor.veterinariaweb.service.CitaService;
 
+import java.time.LocalTime;
+import java.util.List;
+
 public class CitaServiceImpl implements CitaService {
 
     private final CitaRepository citaRepository;
@@ -43,6 +46,33 @@ public class CitaServiceImpl implements CitaService {
         citaRepository.save(cita);
 
         return detallePrescripcion;
+    }
+
+    @Override
+    public Cita agendarCita(Cita cita) {
+        if (cita.getServicio() == null || cita.getServicio().getDuracionMinutos() == null) {
+            throw new IllegalArgumentException("La cita debe tener un servicio con duración válida");
+        }
+
+        LocalTime inicioNueva = cita.getHoraCita();
+        LocalTime finNueva = inicioNueva.plusMinutes(cita.getServicio().getDuracionMinutos());
+
+        List<Cita> citasExistentes = citaRepository.findByVeterinarioAndFechaCitaAndEstadoNot(
+                cita.getVeterinario(),
+                cita.getFechaCita(),
+                "CANCELADA"
+        );
+
+        for (Cita existente : citasExistentes) {
+            LocalTime inicioExistente = existente.getHoraCita();
+            LocalTime finExistente = inicioExistente.plusMinutes(existente.getServicio().getDuracionMinutos());
+
+            if (inicioNueva.isBefore(finExistente) && finNueva.isAfter(inicioExistente)) {
+                throw new IllegalStateException("El veterinario ya tiene una cita asignada en ese rango horario");
+            }
+        }
+
+        return citaRepository.save(cita);
     }
 
 }
