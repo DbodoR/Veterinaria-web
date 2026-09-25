@@ -31,6 +31,7 @@ public class Producto {
     private Boolean esRecetableVeterinario;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "estado", nullable = false)
     private EstadoProducto estado;
 
 }
