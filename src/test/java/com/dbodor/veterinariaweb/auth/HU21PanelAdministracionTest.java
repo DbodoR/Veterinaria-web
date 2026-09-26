@@ -69,7 +69,7 @@ class HU21PanelAdministracionTest {
     void clienteNoEntraAlPanel() throws Exception {
         mockMvc.perform(get("/admin"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/cliente/citas"));
+                .andExpect(redirectedUrl("/cliente/dashboard"));
     }
 
     @Test

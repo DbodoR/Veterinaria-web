@@ -300,7 +300,7 @@ class HU06RegistrarVeterinarioTest {
     @DisplayName("Acceso - un cliente no entra al maestro de veterinarios")
     void clienteNoEntra() throws Exception {
         mockMvc.perform(get("/admin/veterinarios"))
-                .andExpect(redirectedUrl("/cliente/citas"));
+                .andExpect(redirectedUrl("/cliente/dashboard"));
     }
 
     @Test

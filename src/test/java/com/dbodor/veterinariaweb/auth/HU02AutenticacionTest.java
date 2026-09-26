@@ -70,7 +70,7 @@ class HU02AutenticacionTest {
 
         mockMvc.perform(formLogin("/login").user("cliente@test.com").password("Clave123"))
                 .andExpect(authenticated())
-                .andExpect(redirectedUrl("/cliente/citas"));
+                .andExpect(redirectedUrl("/cliente/dashboard"));
     }
 
     @Test
