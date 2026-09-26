@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VetCare Plus - Clínica Veterinaria Integral</title>
+
+    <!-- Fuentes e Iconos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0" rel="stylesheet">
+
+    <!-- Tailwind CDN (para layouts de cuadrícula y responsividad) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Estilos Centralizados -->
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+</head>
+<body class="antialiased">
+
+<!-- NAVBAR -->
+<header class="site-header">
+    <div class="container-custom nav-container">
+        <div class="flex items-center gap-2">
+            <a th:href="@{/home}" class="inline-flex items-center gap-2 text-xl font-bold font-headline text-slate-800">
+                <span class="material-symbols-outlined text-emerald-600 text-3xl" style="font-variation-settings: 'FILL' 1;">pets</span>
+                <span>VetCare<span class="text-blue-600">+</span></span>
+            </a>
+        </div>
+
+        <nav class="hidden lg:flex items-center gap-6">
+            <a th:href="@{/home}" class="nav-link active">Inicio</a>
+            <a href="#servicios" class="nav-link">Servicios</a>
+            <a href="#contacto" class="nav-link">Contacto</a>
+        </nav>
+
+        <div class="flex items-center gap-4">
+            <a th:href="@{/login}" class="btn btn-outline">Iniciar Sesión</a>
+        </div>
+    </div>
+</header>
+
+<!-- CONTENIDO PRINCIPAL -->
+<main class="pt-[72px]">
+
+    <!-- HERO SECTION -->
+    <section class="relative overflow-hidden py-16 lg:py-24">
+        <div class="container-custom relative z-10">
+            <div class="flex flex-col items-center text-center max-w-4xl mx-auto gap-8">
+
+                <div class="w-full rounded-2xl overflow-hidden shadow-xl bg-white border border-slate-200">
+                    <img class="w-full h-[360px] sm:h-[480px] object-cover"
+                         src="https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?auto=format&fit=crop&w=1200&q=80"
+                         alt="Veterinaria examinando mascota con calidez">
+                </div>
+
+                <div class="flex flex-col items-center gap-4 max-w-3xl">
+                    <div class="badge-pill badge-blue shadow-sm">
+                        <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">pets</span>
+                        <span>Atención médica especializada para tu mascota</span>
+                    </div>
+
+                    <h1 class="font-headline text-3xl sm:text-5xl font-bold tracking-tight text-slate-900 leading-tight">
+                        El cuidado profesional que tu mejor amigo merece
+                    </h1>
+
+                    <p class="text-slate-600 text-base sm:text-lg leading-relaxed max-w-2xl">
+                        Brindamos atención integral con especialistas certificados, tecnología médica avanzada y un trato lleno de cariño para garantizar la salud y felicidad de tus mascotas.
+                    </p>
+
+                    <div class="pt-2">
+                        <a th:href="@{/login}" class="btn btn-primary-green">
+                            <span>Reservar Cita Ahora</span>
+                            <span class="material-symbols-outlined text-xl">calendar_month</span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- PILARES / VALOR AGREGADO -->
+    <section class="bg-slate-100/60 py-12 border-y border-slate-200">
+        <div class="container-custom">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined">medical_services</span>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-slate-800 text-sm">Veterinarios Certificados</h3>
+                        <p class="text-xs text-slate-500 mt-1">Especialistas con posgrado y vocación genuina.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined">calendar_clock</span>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-slate-800 text-sm">Agenda 100% Online</h3>
+                        <p class="text-xs text-slate-500 mt-1">Reserva en minutos sin llamadas ni esperas.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-full bg-sky-50 text-sky-700 flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined">devices</span>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-slate-800 text-sm">Historial Digital</h3>
+                        <p class="text-xs text-slate-500 mt-1">Historial clínico y recetas disponibles 24/7.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined">biotech</span>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-slate-800 text-sm">Laboratorio Propio</h3>
+                        <p class="text-xs text-slate-500 mt-1">Diagnósticos precisos y resultados el mismo día.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN DE SERVICIOS -->
+    <section class="py-20 bg-white" id="servicios">
+        <div class="container-custom">
+            <div class="flex flex-col items-center text-center max-w-2xl mx-auto mb-14">
+                <span class="badge-pill badge-mint mb-2">NUESTROS SERVICIOS</span>
+                <h2 class="font-headline text-3xl sm:text-4xl font-bold text-slate-900">Atención integral para cada etapa</h2>
+                <p class="text-slate-600 mt-3">Cuidamos a tu mascota con el máximo rigor clínico y calidez humana.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <div class="service-card">
+                    <div class="service-icon-box bg-blue-50 text-blue-600">
+                        <span class="material-symbols-outlined text-3xl">stethoscope</span>
+                    </div>
+                    <h3 class="font-headline text-xl font-semibold text-slate-800 mb-2">Consulta Médica General</h3>
+                    <p class="text-sm text-slate-600">Evaluación preventiva exhaustiva, control de signos vitales, diagnóstico temprano y asesoría nutricional.</p>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon-box bg-emerald-50 text-emerald-600">
+                        <span class="material-symbols-outlined text-3xl">vaccines</span>
+                    </div>
+                    <h3 class="font-headline text-xl font-semibold text-slate-800 mb-2">Vacunación y Desparasitación</h3>
+                    <p class="text-sm text-slate-600">Esquemas biológicos completos para cachorros y adultos, pasaporte sanitario oficial y prevención antiparasitaria.</p>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon-box bg-sky-50 text-sky-600">
+                        <span class="material-symbols-outlined text-3xl">surgical</span>
+                    </div>
+                    <h3 class="font-headline text-xl font-semibold text-slate-800 mb-2">Cirugía Especializada</h3>
+                    <p class="text-sm text-slate-600">Quirófano presurizado con anestesia inhalatoria y monitoreo multiparamétrico continuo.</p>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon-box bg-indigo-50 text-indigo-600">
+                        <span class="material-symbols-outlined text-3xl">dentistry</span>
+                    </div>
+                    <h3 class="font-headline text-xl font-semibold text-slate-800 mb-2">Odontología Veterinaria</h3>
+                    <p class="text-sm text-slate-600">Profilaxis ultrasónica profunda, pulido dental, tratamiento periodontal y extracciones sin dolor.</p>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon-box bg-emerald-50 text-emerald-600">
+                        <span class="material-symbols-outlined text-3xl">radiology</span>
+                    </div>
+                    <h3 class="font-headline text-xl font-semibold text-slate-800 mb-2">Laboratorio y Rayos X</h3>
+                    <p class="text-sm text-slate-600">Hemogramas instantáneos, química sanguínea, ecografías abdominales y radiología digital.</p>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon-box bg-blue-50 text-blue-600">
+                        <span class="material-symbols-outlined text-3xl">shower</span>
+                    </div>
+                    <h3 class="font-headline text-xl font-semibold text-slate-800 mb-2">Estética Canina & Spa Felino</h3>
+                    <p class="text-sm text-slate-600">Baños medicados, cortes según estándar de raza, higiene de oídos y pedicura dermatológica.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- BANNER DE CONTACTO Y URGENCIAS -->
+    <section class="container-custom my-16">
+        <div class="cta-banner">
+            <div class="max-w-2xl mx-auto flex flex-col items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-white mb-2">
+                    <span class="material-symbols-outlined text-2xl">notifications_active</span>
+                </div>
+                <h2 class="font-headline text-2xl sm:text-4xl font-bold tracking-tight">
+                    ¿Tu mascota necesita atención o chequeo preventivo?
+                </h2>
+                <p class="text-white/90 text-sm sm:text-base leading-relaxed">
+                    Agenda tu turno online en cuestión de minutos o comunícate con nuestro equipo médico.
+                </p>
+                <div class="flex flex-wrap items-center justify-center gap-4 pt-4">
+                    <a th:href="@{/login}" class="btn btn-white font-bold">
+                        <span>Agendar Cita Ahora</span>
+                        <span class="material-symbols-outlined text-lg">calendar_today</span>
+                    </a>
+                    <a href="tel:+573001234567" class="btn btn-outline-white">
+                        <span class="material-symbols-outlined text-lg">call</span>
+                        <span>Línea Telefónica</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="site-footer" id="contacto">
+    <div class="container-custom">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pb-12 border-b border-slate-200">
+
+            <div>
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="material-symbols-outlined text-emerald-600 text-2xl" style="font-variation-settings: 'FILL' 1;">pets</span>
+                    <span class="font-headline text-lg font-bold text-slate-800">VetCare<span class="text-blue-600">+</span></span>
+                </div>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    Medicina veterinaria avanzada, diagnóstico por imágenes y cuidados preventivos con calidez compasiva.
+                </p>
+            </div>
+
+            <div>
+                <h4 class="font-semibold text-slate-800 text-sm mb-3">Navegación</h4>
+                <ul class="space-y-2 text-xs text-slate-500">
+                    <li><a th:href="@{/}" class="hover:text-blue-600">Inicio</a></li>
+                    <li><a href="#servicios" class="hover:text-blue-600">Servicios</a></li>
+                    <li><a th:href="@{/login}" class="hover:text-blue-600">Iniciar Sesión</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-semibold text-slate-800 text-sm mb-3">Contacto</h4>
+                <ul class="space-y-2 text-xs text-slate-500">
+                    <li class="flex items-center gap-2"><span class="material-symbols-outlined text-emerald-600 text-base">call</span> (604) 444 0000</li>
+                    <li class="flex items-center gap-2"><span class="material-symbols-outlined text-emerald-600 text-base">chat</span> WhatsApp: +57 300 000 0000</li>
+                    <li class="flex items-center gap-2"><span class="material-symbols-outlined text-blue-600 text-base">location_on</span> Medellín, Colombia</li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-semibold text-slate-800 text-sm mb-3">Horario</h4>
+                <p class="text-xs text-slate-500">Lunes a Sábado: 08:00 - 18:00</p>
+                <p class="text-xs text-emerald-600 font-semibold mt-1">Urgencias: 24 Horas</p>
+            </div>
+
+        </div>
+
+        <div class="pt-6 text-center text-xs text-slate-400">
+            <p>© 2026 VetCare Plus. Todos los derechos reservados.</p>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

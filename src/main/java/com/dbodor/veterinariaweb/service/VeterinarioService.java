@@ -3,6 +3,7 @@ package com.dbodor.veterinariaweb.service;
 import com.dbodor.veterinariaweb.dto.VeterinarioForm;
 import com.dbodor.veterinariaweb.model.Veterinario;
 
+import java.time.LocalTime;
 import java.util.List;
 
 /**
