@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mascotas | Veterinaria</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+
+<header class="barra">
+    <span class="marca">Veterinaria</span>
+    <form th:action="@{/logout}" method="post" class="en-linea">
+        <button type="submit" class="boton-enlace">Cerrar sesion</button>
+    </form>
+</header>
+
+<div class="disposicion">
+
+    <nav class="menu">
+        <p class="grupo">Maestros</p>
+        <a th:href="@{/admin/clientes}">Clientes</a>
+        <a th:href="@{/admin/veterinarios}">Veterinarios</a>
+        <a th:href="@{/admin/mascotas}" class="activo">Mascotas</a>
+        <a th:href="@{/admin/servicios}">Servicios</a>
+        <a th:href="@{/admin/productos}">Productos</a>
+
+        <p class="grupo">Transaccional</p>
+        <a th:href="@{/admin/citas}">Reservas de citas</a>
+
+        <p class="grupo">Reportes</p>
+        <a th:href="@{/admin/reportes/citas}">Citas e ingresos</a>
+        <a th:href="@{/admin/reportes/historias}">Historias clinicas</a>
+    </nav>
+
+    <main class="contenido">
+
+        <div class="encabezado-seccion">
+            <h1>Mascotas</h1>
+            <a th:href="@{/admin/mascotas/nueva}" class="boton">Registrar mascota</a>
+        </div>
+
+        <div class="alerta alerta-exito" th:if="${mensajeExito}" th:text="${mensajeExito}"></div>
+
+        <form th:action="@{/admin/mascotas}" method="get" class="barra-busqueda">
+            <input type="text" name="buscar" th:value="${buscar}"
+                   placeholder="Buscar por mascota, dueno o documento">
+            <button type="submit">Buscar</button>
+            <a th:href="@{/admin/mascotas}" class="boton-enlace" th:if="${buscar != ''}">Limpiar</a>
+        </form>
+
+        <table class="tabla" th:if="${!mascotas.isEmpty()}">
+            <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Especie</th>
+                <th>Raza</th>
+                <th>Edad</th>
+                <th>Dueno</th>
+                <th>Documento</th>
+                <th>Estado</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="m : ${mascotas}">
+                <td th:text="${m.nombre}">Nombre</td>
+                <td th:text="${m.especie}">Especie</td>
+                <td th:text="${m.raza != null} ? ${m.raza} : '-'">Raza</td>
+                <td th:text="${m.edad}">Edad</td>
+                <td th:text="${m.usuario.nombre}">Dueno</td>
+                <td th:text="${m.usuario.documento}">Documento</td>
+                <td>
+                    <span class="etiqueta"
+                          th:classappend="${m.estado == 'ACTIVO'} ? 'etiqueta-activa' : 'etiqueta-inactiva'"
+                          th:text="${m.estado}">Estado</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- CA3: sin mascotas se invita a registrar la primera. -->
+        <div class="vacio" th:if="${mascotas.isEmpty() and buscar == ''}">
+            <p>No hay mascotas registradas.</p>
+            <a th:href="@{/admin/mascotas/nueva}" class="boton">Registrar la primera mascota</a>
+        </div>
+
+        <p class="vacio" th:if="${mascotas.isEmpty() and buscar != ''}">
+            Ninguna mascota coincide con la busqueda.
+        </p>
+
+    </main>
+</div>
+
+</body>
+</html>
