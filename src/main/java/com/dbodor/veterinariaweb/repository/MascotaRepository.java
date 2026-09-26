@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Acceso a mascotas. Lo usan el maestro de mascotas (HU-11, HU-12) y la
@@ -46,4 +47,8 @@ public interface MascotaRepository extends JpaRepository<Mascota, Long> {
 
     /** Evita registrar dos mascotas con el mismo nombre para un mismo dueno (HU-11). */
     boolean existsByUsuarioIdUsuarioAndNombreIgnoreCase(Long idUsuario, String nombre);
+
+        /** HU-24: la mascota con su dueno ya cargado, para la historia clinica. */
+    @Query("select m from Mascota m join fetch m.usuario where m.idMascota = :id")
+    Optional<Mascota> conDueno(@Param("id") Long id);
 }

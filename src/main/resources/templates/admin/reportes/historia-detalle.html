@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Historia clinica | Veterinaria</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+
+<header class="barra">
+    <a th:href="@{/admin}" class="marca">Veterinaria</a>
+    <form th:action="@{/logout}" method="post" class="en-linea">
+        <button type="submit" class="boton-enlace">Cerrar sesion</button>
+    </form>
+</header>
+
+<div class="disposicion">
+
+    <nav class="menu">
+        <a th:href="@{/admin}">Panel principal</a>
+
+        <p class="grupo">Maestros</p>
+        <a th:href="@{/admin/clientes}">Clientes</a>
+        <a th:href="@{/admin/veterinarios}">Veterinarios</a>
+        <a th:href="@{/admin/mascotas}">Mascotas</a>
+        <a th:href="@{/admin/servicios}">Servicios</a>
+        <a th:href="@{/admin/productos}">Productos</a>
+
+        <p class="grupo">Transaccional</p>
+        <a th:href="@{/admin/citas}">Reservas de citas</a>
+
+        <p class="grupo">Reportes</p>
+        <a th:href="@{/admin/reportes/citas}">Citas e ingresos</a>
+        <a th:href="@{/admin/reportes/historias}" class="activo">Historias clinicas</a>
+    </nav>
+
+    <main class="contenido">
+        <div class="encabezado-seccion">
+            <h1 th:text="'Historia clinica de ' + ${mascota.nombre}">Historia clinica</h1>
+            <a th:href="@{/admin/reportes/historias/{id}/pdf(id=${mascota.idMascota})}" class="boton">Descargar PDF</a>
+        </div>
+
+        <table class="tabla">
+            <thead>
+            <tr><th colspan="4">Datos de la mascota y su propietario</th></tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><strong>Especie</strong></td><td th:text="${mascota.especie}">Especie</td>
+                <td><strong>Propietario</strong></td><td th:text="${mascota.usuario.nombre}">Dueno</td>
+            </tr>
+            <tr>
+                <td><strong>Raza</strong></td><td th:text="${mascota.raza != null} ? ${mascota.raza} : '-'">Raza</td>
+                <td><strong>Documento</strong></td><td th:text="${mascota.usuario.documento}">Documento</td>
+            </tr>
+            <tr>
+                <td><strong>Edad</strong></td><td th:text="${mascota.edad}">Edad</td>
+                <td><strong>Telefono</strong></td><td th:text="${mascota.usuario.telefono}">Telefono</td>
+            </tr>
+            <tr>
+                <td><strong>Peso</strong></td><td th:text="${mascota.pesoKg != null} ? ${mascota.pesoKg} + ' kg' : '-'">Peso</td>
+                <td><strong>Estado</strong></td><td th:text="${mascota.estado}">Estado</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h2>Atenciones</h2>
+
+        <table class="tabla" th:if="${!atenciones.isEmpty()}">
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Servicio</th>
+                <th>Veterinario</th>
+                <th>Estado</th>
+                <th>Valor</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="a : ${atenciones}">
+                <td th:text="${a.fechaCita}">2026-08-05</td>
+                <td th:text="${a.horaCita}">10:00</td>
+                <td th:text="${a.servicio.nombre}">Servicio</td>
+                <td th:text="${a.veterinario.nombre}">Veterinario</td>
+                <td th:text="${a.estado}">Estado</td>
+                <td th:text="'$' + ${#numbers.formatDecimal(a.costoTotal, 0, 'POINT', 0, 'DEFAULT')}">Valor</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <p class="vacio" th:if="${atenciones.isEmpty()}">La mascota no tiene atenciones registradas.</p>
+
+        <p><a th:href="@{/admin/reportes/historias}" class="boton-enlace">&larr; Volver al listado</a></p>
+    </main>
+</div>
+
+</body>
+</html>
