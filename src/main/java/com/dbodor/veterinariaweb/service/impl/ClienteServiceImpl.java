@@ -1,6 +1,7 @@
 package com.dbodor.veterinariaweb.service.impl;
 
 import com.dbodor.veterinariaweb.dto.ClienteForm;
+import com.dbodor.veterinariaweb.dto.PerfilClienteDto;
 import com.dbodor.veterinariaweb.enums.EstadoUsuario;
 import com.dbodor.veterinariaweb.enums.RolUsuario;
 import com.dbodor.veterinariaweb.model.Usuario;
@@ -70,5 +71,71 @@ public class ClienteServiceImpl implements ClienteService {
         cliente.setDebeCambiarPassword(Boolean.TRUE);
 
         return new AltaCliente(usuarioRepository.save(cliente), temporal);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PerfilClienteDto consultarPerfil(Long idUsuario) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado con id: " + idUsuario));
+
+        return new PerfilClienteDto(
+                usuario.getIdUsuario(),
+                usuario.getNombre(),
+                usuario.getDocumento(),
+                usuario.getCorreo(),
+                usuario.getTelefono(),
+                usuario.getDireccion(),
+                usuario.getCiudad()
+        );
+    }
+
+    @Override
+    @Transactional
+    public PerfilClienteDto actualizarPerfil(Long idUsuario, PerfilClienteDto cambios) {
+        if (cambios == null) {
+            throw new IllegalArgumentException("Los datos del perfil no pueden ser nulos.");
+        }
+        if (cambios.getNombre() == null || cambios.getNombre().isBlank()) {
+            throw new IllegalArgumentException("El nombre completo es obligatorio.");
+        }
+        if (cambios.getCorreo() == null || cambios.getCorreo().isBlank()) {
+            throw new IllegalArgumentException("El correo electrónico es obligatorio.");
+        }
+        if (cambios.getTelefono() == null || cambios.getTelefono().isBlank()) {
+            throw new IllegalArgumentException("El teléfono de contacto es obligatorio.");
+        }
+
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado con id: " + idUsuario));
+
+        String nuevoCorreo = cambios.getCorreo().trim();
+
+        if (usuarioRepository.existsByCorreoAndIdUsuarioNot(nuevoCorreo, idUsuario)) {
+            throw new DatoDuplicadoException("correo", nuevoCorreo);
+        }
+
+        usuario.setNombre(cambios.getNombre().trim());
+        usuario.setCorreo(nuevoCorreo);
+        usuario.setTelefono(cambios.getTelefono().trim());
+
+        if (cambios.getDireccion() != null) {
+            usuario.setDireccion(cambios.getDireccion().trim());
+        }
+        if (cambios.getCiudad() != null) {
+            usuario.setCiudad(cambios.getCiudad().trim());
+        }
+
+        Usuario guardado = usuarioRepository.save(usuario);
+
+        return new PerfilClienteDto(
+                guardado.getIdUsuario(),
+                guardado.getNombre(),
+                guardado.getDocumento(),
+                guardado.getCorreo(),
+                guardado.getTelefono(),
+                guardado.getDireccion(),
+                guardado.getCiudad()
+        );
     }
 }

@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>VetCare Plus - Portal Cliente</title>
+
+    <!-- Fuentes e Iconos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+    <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@600;700;800&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Hoja de estilos del Dashboard Cliente -->
+    <link rel="stylesheet" th:href="@{/css/dashboard-cliente.css}"/>
+</head>
+<body class="bg-[#F8FAFC] antialiased">
+
+<!-- ==================== SIDEBAR LATERAL ==================== -->
+<aside class="fixed left-0 top-0 h-full w-72 bg-white shadow-sm z-50 flex flex-col justify-between py-6 px-4 border-r border-[#E2E8F0]">
+    <div class="flex flex-col gap-8">
+
+        <!-- Brand Logo -->
+        <div class="flex items-center gap-3 px-2">
+            <a th:href="@{/cliente/dashboard(seccion='mascotas')}" class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#006C49] text-3xl" style="font-variation-settings: 'FILL' 1;">pets</span>
+                <div class="flex flex-col">
+                    <span class="font-headline text-xl font-bold text-slate-800 leading-none">VetCare</span>
+                    <span class="text-[11px] font-bold text-[#006C49] uppercase tracking-wider mt-1">Portal Cliente</span>
+                </div>
+            </a>
+        </div>
+
+        <!-- Menú de Navegación -->
+        <nav class="flex flex-col gap-1.5">
+            <a th:href="@{/cliente/dashboard(seccion='cuenta')}"
+               class="nav-item"
+               th:classappend="${seccion == 'cuenta'} ? 'active' : ''">
+                <i class="fa-regular fa-address-card text-base"></i>
+                <span>Datos de la cuenta</span>
+            </a>
+
+            <a th:href="@{/cliente/dashboard(seccion='mascotas')}"
+               class="nav-item"
+               th:classappend="${seccion == 'mascotas' or seccion == null} ? 'active' : ''">
+                <i class="fa-solid fa-paw text-base"></i>
+                <span>Mis Mascotas</span>
+            </a>
+
+            <a th:href="@{/cliente/dashboard(seccion='citas')}"
+               class="nav-item"
+               th:classappend="${seccion == 'citas'} ? 'active' : ''">
+                <i class="fa-regular fa-calendar-check text-base"></i>
+                <span>Citas y Consultas</span>
+            </a>
+
+            <a th:href="@{/cliente/dashboard(seccion='historial')}"
+               class="nav-item"
+               th:classappend="${seccion == 'historial'} ? 'active' : ''">
+                <i class="fa-solid fa-receipt text-base"></i>
+                <span>Historial Médico</span>
+            </a>
+
+            <a th:href="@{/cliente/dashboard(seccion='opciones')}"
+               class="nav-item"
+               th:classappend="${seccion == 'opciones'} ? 'active' : ''">
+                <i class="fa-solid fa-sliders text-base"></i>
+                <span>Opciones de cuenta</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Perfil del Usuario y Logout -->
+    <div class="flex flex-col gap-3 bg-[#F2F3FF] rounded-2xl p-3 border border-[#E2E8F0]">
+        <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-full bg-[#0058BE] text-white flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-user text-xs"></i>
+            </div>
+            <div class="flex flex-col min-w-0 flex-1">
+          <span class="text-sm font-semibold text-slate-800 truncate"
+                th:text="${usuario != null ? usuario.nombre : 'Usuario'}">Carlos Mendoza</span>
+                <span class="text-xs text-slate-500 truncate"
+                      th:text="${usuario != null ? usuario.correo : 'correo@example.com'}">carlos.vet@example.com</span>
+            </div>
+        </div>
+
+        <form th:action="@{/logout}" method="post" class="w-full m-0">
+            <button type="submit" class="flex items-center justify-center gap-1.5 w-full py-1.5 px-3 rounded-full text-red-600 hover:bg-red-50 text-xs font-semibold transition-all">
+                <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i>
+                <span>Cerrar sesión</span>
+            </button>
+        </form>
+    </div>
+</aside>
+
+<!-- ==================== CONTENEDOR DERECHO ==================== -->
+<div class="pl-72 flex flex-col min-h-screen">
+
+    <!-- HEADER SUPERIOR -->
+    <header class="fixed top-0 left-72 right-0 h-20 bg-white/90 backdrop-blur-xl shadow-sm border-b border-[#E2E8F0] z-40 flex items-center justify-between px-8">
+        <div class="flex items-center gap-3">
+            <div class="flex flex-col">
+          <span class="font-headline text-lg font-bold text-slate-800"
+                th:text="'¡Hola, ' + (${usuario != null ? usuario.nombre : 'Usuario'}) + '!'">¡Hola, Carlos!</span>
+                <div class="flex items-center gap-1.5">
+                    <span class="inline-block w-2 h-2 rounded-full bg-[#006C49]"></span>
+                    <span class="text-xs text-slate-500">Sesión activa • Paciente preferente</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <button type="button" aria-label="Notificaciones" class="relative p-2 rounded-full text-slate-600 hover:bg-slate-100 transition-colors">
+                <i class="fa-regular fa-bell text-lg"></i>
+                <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-[#006C49] rounded-full ring-2 ring-white"></span>
+            </button>
+            <div class="w-8 h-8 rounded-full bg-[#0058BE] text-white flex items-center justify-center shadow-sm">
+                <i class="fa-solid fa-user text-xs"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- ÁREA PRINCIPAL -->
+    <main class="relative w-full pt-20 px-8 pb-12 flex-1">
+        <div class="flex flex-col w-full py-6">
+
+            <!-- RESUMEN MÉTRICO SUPERIOR -->
+            <div class="grid grid-cols-1 gap-6 mb-8 md:grid-cols-3">
+                <!-- Card Mascotas -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-[#E2E8F0] flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-emerald-50 text-[#006C49] flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-paw text-xl"></i>
+                    </div>
+                    <div class="flex flex-col min-w-0">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Mascotas activas</span>
+                        <div class="flex items-baseline gap-1 mt-0.5">
+                            <span class="font-headline text-2xl font-bold text-slate-800" th:text="${totalMascotas != null ? totalMascotas : 0}">0</span>
+                            <span class="text-xs text-[#006C49] font-bold">registradas</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Próxima Consulta -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-[#E2E8F0] flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-blue-50 text-[#0058BE] flex items-center justify-center shrink-0">
+                        <i class="fa-regular fa-calendar-check text-xl"></i>
+                    </div>
+                    <div class="flex flex-col min-w-0">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Próxima Consulta</span>
+                        <span class="text-sm font-semibold text-slate-800 truncate mt-0.5"
+                              th:text="${proximaCita != null} ? ${#temporals.format(proximaCita.fechaCita, 'dd MMM') + ' - ' + proximaCita.mascota.nombre} : 'Sin citas pendientes'">
+                Sin citas pendientes
+              </span>
+                        <span class="text-xs text-[#0058BE] font-medium"
+                              th:if="${proximaCita != null}"
+                              th:text="${proximaCita.servicio.nombre}">
+              </span>
+                    </div>
+                </div>
+
+                <!-- Card Estado de Cuenta -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-[#E2E8F0] flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-[#EAEDFF] text-[#0058BE] flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-shield-cat text-xl"></i>
+                    </div>
+                    <div class="flex flex-col min-w-0">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Estado de cuenta</span>
+                        <span class="text-sm font-semibold text-slate-800 truncate mt-0.5" th:text="${usuario != null ? usuario.estado : 'ACTIVO'}">ACTIVO</span>
+                        <span class="text-xs text-emerald-600 font-medium">Servicios al día</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================== -->
+            <!-- SECCIÓN 1: DATOS DE LA CUENTA                                  -->
+            <!-- ============================================================== -->
+            <section th:if="${seccion == 'cuenta'}" class="w-full bg-white rounded-3xl border border-[#E2E8F0] shadow-sm p-6 sm:p-10 transition-all">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 mb-8 border-b border-[#E2E8F0] gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-blue-50 text-[#0058BE] flex items-center justify-center text-lg shadow-sm">
+                            <i class="fa-solid fa-address-card"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight font-headline">Datos de la cuenta</h1>
+                            <p class="text-sm text-slate-500 mt-0.5">Consulta tu información personal y credenciales de acceso registradas</p>
+                        </div>
+                    </div>
+                </div>
+
+                <form id="accountForm" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                        <!-- Nombre Completo -->
+                        <div class="space-y-1.5">
+                            <label for="fullName" class="block text-xs font-bold uppercase tracking-wider text-slate-600">
+                                Nombre Completo
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                    <i class="fa-regular fa-user"></i>
+                                </div>
+                                <input type="text" id="fullName" name="nombre" th:value="${usuario.nombre}" readonly
+                                       class="w-full pl-10 pr-4 py-3 bg-slate-50 text-slate-800 text-sm font-medium rounded-xl border border-slate-200 outline-none cursor-default">
+                            </div>
+                        </div>
+
+                        <!-- Documento de Identidad -->
+                        <div class="space-y-1.5">
+                            <label for="idNumber" class="block text-xs font-bold uppercase tracking-wider text-slate-600">
+                                Documento de Identidad
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                    <i class="fa-regular fa-id-card"></i>
+                                </div>
+                                <input type="text" id="idNumber" name="documento" th:value="${usuario.documento}" readonly
+                                       class="w-full pl-10 pr-4 py-3 bg-slate-50 text-slate-800 text-sm font-medium rounded-xl border border-slate-200 outline-none cursor-default">
+                            </div>
+                        </div>
+
+                        <!-- Correo Electrónico -->
+                        <div class="space-y-1.5">
+                            <div class="flex items-center justify-between">
+                                <label for="email" class="block text-xs font-bold uppercase tracking-wider text-slate-600">
+                                    Correo Electrónico
+                                </label>
+                                <span class="inline-flex items-center gap-1 text-[11px] text-emerald-600 font-medium">
+                    <i class="fa-solid fa-circle-check text-[10px]"></i> Verificado
+                  </span>
+                            </div>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                    <i class="fa-regular fa-envelope"></i>
+                                </div>
+                                <input type="email" id="email" name="correo" th:value="${usuario.correo}" readonly
+                                       class="w-full pl-10 pr-4 py-3 bg-slate-50 text-slate-800 text-sm font-medium rounded-xl border border-slate-200 outline-none cursor-default">
+                            </div>
+                        </div>
+
+                        <!-- Teléfono -->
+                        <div class="space-y-1.5">
+                            <label for="phone" class="block text-xs font-bold uppercase tracking-wider text-slate-600">
+                                Teléfono de Contacto
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                    <i class="fa-solid fa-phone text-xs"></i>
+                                </div>
+                                <input type="tel" id="phone" name="telefono" th:value="${usuario.telefono}" readonly
+                                       class="w-full pl-10 pr-4 py-3 bg-slate-50 text-slate-800 text-sm font-medium rounded-xl border border-slate-200 outline-none cursor-default">
+                            </div>
+                        </div>
+
+                        <!-- Dirección -->
+                        <div class="space-y-1.5 md:col-span-2">
+                            <label for="address" class="block text-xs font-bold uppercase tracking-wider text-slate-600">
+                                Dirección de Residencia
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                    <i class="fa-regular fa-map"></i>
+                                </div>
+                                <input type="text" id="address" name="direccion"
+                                       th:value="${usuario.direccion != null ? usuario.direccion : 'No registrada'}" readonly
+                                       class="w-full pl-10 pr-4 py-3 bg-slate-50 text-slate-800 text-sm font-medium rounded-xl border border-slate-200 outline-none cursor-default">
+                            </div>
+                        </div>
+
+                        <!-- Rol y Estado -->
+                        <div class="space-y-1.5 md:col-span-2">
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 flex flex-wrap items-center justify-between gap-4">
+                                <div>
+                                    <span class="text-xs font-bold uppercase tracking-wider text-slate-500 block">Tipo de Perfil</span>
+                                    <span class="text-sm font-bold text-slate-800" th:text="${usuario.rol}">CLIENTE</span>
+                                </div>
+                                <div>
+                                    <span class="text-xs font-bold uppercase tracking-wider text-slate-500 block">Estado del Usuario</span>
+                                    <span class="badge-pill badge-active" th:text="${usuario.estado}">ACTIVO</span>
+                                </div>
+                                <button type="button" onclick="openChangePasswordModal()" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-200 text-xs font-semibold rounded-xl transition-all shadow-sm">
+                                    <i class="fa-solid fa-key text-xs"></i>
+                                    <span>Modificar Contraseña</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Modal de Cambio de Contraseña -->
+                <div id="passwordModal" class="hidden mt-6 pt-6 border-t border-dashed border-slate-200 bg-slate-50/70 -mx-6 sm:-mx-10 px-6 sm:px-10 pb-6 rounded-b-3xl">
+                    <div class="max-w-md space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-shield-halved text-[#0058BE]"></i>
+                                Actualizar tu contraseña
+                            </h3>
+                            <button type="button" onclick="closeChangePasswordModal()" class="text-slate-400 hover:text-slate-600 text-xs">
+                                <i class="fa-solid fa-xmark text-sm"></i>
+                            </button>
+                        </div>
+
+                        <div class="space-y-3">
+                            <input type="password" placeholder="Contraseña actual" class="w-full px-3 py-2 text-sm bg-white rounded-lg border border-slate-200 focus:outline-none focus:border-blue-500">
+                            <input type="password" placeholder="Nueva contraseña (mínimo 6 caracteres)" class="w-full px-3 py-2 text-sm bg-white rounded-lg border border-slate-200 focus:outline-none focus:border-blue-500">
+                            <input type="password" placeholder="Confirmar nueva contraseña" class="w-full px-3 py-2 text-sm bg-white rounded-lg border border-slate-200 focus:outline-none focus:border-blue-500">
+                        </div>
+
+                        <div class="flex items-center gap-2 pt-2">
+                            <button type="button" onclick="closeChangePasswordModal(); triggerToast('Solicitud recibida');" class="px-4 py-2 bg-[#0058BE] hover:bg-blue-700 text-white text-xs font-bold rounded-lg shadow-sm">
+                                Guardar nueva clave
+                            </button>
+                            <button type="button" onclick="closeChangePasswordModal()" class="px-3 py-2 text-slate-500 hover:text-slate-700 text-xs font-semibold">
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SECCIÓN 2: MIS MASCOTAS                                        -->
+            <!-- ============================================================== -->
+            <section th:if="${seccion == 'mascotas' or seccion == null}" class="w-full bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-slate-100">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-100">
+                    <div>
+                        <div class="flex items-center gap-3">
+                            <h2 class="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight font-headline">Mis Mascotas</h2>
+                            <span class="badge-pill badge-active">REGISTRO AL DÍA</span>
+                        </div>
+                        <p class="mt-1 text-sm md:text-base text-slate-500">
+                            Gestiona los expedientes sanitarios y datos clínicos de tus animales de compañía registrados.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Tabla de Mascotas -->
+                <div class="mt-6 overflow-x-auto rounded-2xl border border-slate-100 bg-[#FBFCFE]">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                        <tr class="text-[11px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-100 bg-slate-50/50">
+                            <th class="py-3.5 px-5">Mascota</th>
+                            <th class="py-3.5 px-5">Especie</th>
+                            <th class="py-3.5 px-5">Raza</th>
+                            <th class="py-3.5 px-5">Sexo</th>
+                            <th class="py-3.5 px-5">Peso</th>
+                            <th class="py-3.5 px-5">Estado</th>
+                        </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-sm">
+                        <!-- Estado Vacío -->
+                        <tr th:if="${#lists.isEmpty(mascotas)}">
+                            <td colspan="6" class="py-8 text-center text-slate-400">
+                                No tienes mascotas activas registradas en tu cuenta.
+                            </td>
+                        </tr>
+
+                        <!-- Iteración de Mascotas -->
+                        <tr th:each="m : ${mascotas}" class="hover:bg-blue-50/30 transition-colors">
+                            <td class="py-4 px-5">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-full bg-blue-100 text-[#0058BE] flex items-center justify-center font-bold text-sm">
+                                        <span th:text="${#strings.substring(m.nombre, 0, 1)}">M</span>
+                                    </div>
+                                    <div>
+                                        <div class="font-bold text-slate-900 text-base" th:text="${m.nombre}">Nombre</div>
+                                        <div class="text-xs text-slate-400" th:text="'ID: #' + ${m.idMascota}">#1</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-4 px-5">
+                    <span class="badge-pill"
+                          th:classappend="${#strings.toLowerCase(m.especie) == 'canino' ? 'badge-canine' : 'badge-feline'}"
+                          th:text="${m.especie}">CANINO</span>
+                            </td>
+                            <td class="py-4 px-5 text-slate-700" th:text="${m.raza}">Criollo</td>
+                            <td class="py-4 px-5">
+                                <span class="text-xs font-semibold text-slate-600" th:text="${m.sexo}">Macho</span>
+                            </td>
+                            <td class="py-4 px-5 text-slate-700" th:text="${m.peso != null ? m.peso + ' kg' : 'N/A'}">12 kg</td>
+                            <td class="py-4 px-5">
+                                <span class="badge-pill badge-active" th:text="${m.estado}">ACTIVO</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-4 flex items-center justify-between text-xs text-slate-500 px-1">
+                    <div>Mostrando <strong th:text="${#lists.size(mascotas)}">0</strong> mascotas registradas</div>
+                    <div class="flex items-center gap-2">
+                        <span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
+                        <span>Expedientes actualizados</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SECCIÓN 3: CITAS Y CONSULTAS (HISTORIAL)                       -->
+            <!-- ============================================================== -->
+            <section th:if="${seccion == 'citas'}" class="w-full bg-white rounded-3xl border border-slate-100 shadow-sm p-6 md:p-9 transition-all">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-7 border-b border-slate-100">
+                    <div>
+                        <div class="flex items-center gap-3">
+                            <h1 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight font-headline">Citas y Consultas</h1>
+                            <span class="badge-pill badge-active">HISTORIAL</span>
+                        </div>
+                        <p class="text-sm md:text-base text-slate-500 mt-1">Revisa el historial de atenciones, profesionales asignados y estado de citas de tus mascotas.</p>
+                    </div>
+                </div>
+
+                <!-- Tabla Citas -->
+                <div class="mt-6 overflow-x-auto border border-slate-100 rounded-2xl">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                        <tr class="bg-slate-50/70 border-b border-slate-100 text-[11px] font-bold uppercase tracking-wider text-slate-400 font-headline">
+                            <th class="py-3.5 px-4">Fecha y Hora</th>
+                            <th class="py-3.5 px-4">Mascota</th>
+                            <th class="py-3.5 px-4">Servicio</th>
+                            <th class="py-3.5 px-4">Veterinario</th>
+                            <th class="py-3.5 px-4 text-right">Monto</th>
+                            <th class="py-3.5 px-4 text-center">Estado</th>
+                        </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-sm">
+                        <!-- Estado Vacío -->
+                        <tr th:if="${#lists.isEmpty(citas)}">
+                            <td colspan="6" class="py-8 text-center text-slate-400">
+                                No tienes citas registradas actualmente en el sistema.
+                            </td>
+                        </tr>
+
+                        <!-- Iteración de Citas -->
+                        <tr th:each="c : ${citas}" class="hover:bg-slate-50 transition-colors">
+                            <td class="py-4 px-4 whitespace-nowrap">
+                                <div class="font-bold text-slate-800" th:text="${#temporals.format(c.fechaCita, 'dd MMM, yyyy')}">24 Nov, 2026</div>
+                                <div class="text-xs text-blue-600 font-medium" th:text="${#temporals.format(c.horaCita, 'HH:mm')} + ' hrs'">10:30 hrs</div>
+                            </td>
+                            <td class="py-4 px-4 whitespace-nowrap">
+                                <span class="font-bold text-slate-800" th:text="${c.mascota.nombre}">Mascota</span>
+                                <span class="text-xs text-slate-400 block" th:text="${c.mascota.especie}">Canino</span>
+                            </td>
+                            <td class="py-4 px-4 font-semibold text-slate-800" th:text="${c.servicio.nombre}">Consulta General</td>
+                            <td class="py-4 px-4 whitespace-nowrap text-slate-700" th:text="${c.veterinario.usuario.nombre}">Dr. Nombre</td>
+                            <td class="py-4 px-4 text-right whitespace-nowrap font-bold text-slate-900"
+                                th:text="${c.montoTotal != null ? '$' + #numbers.formatDecimal(c.montoTotal, 0, 'POINT', 0, 'POINT') : '$' + #numbers.formatDecimal(c.servicio.precio, 0, 'POINT', 0, 'POINT')}">
+                                $0
+                            </td>
+                            <td class="py-4 px-4 text-center whitespace-nowrap">
+                    <span class="badge-pill"
+                          th:classappend="${c.estado == 'PROGRAMADA' ? 'bg-blue-50 text-blue-700 border border-blue-200' : (c.estado == 'CANCELADA' ? 'bg-red-50 text-red-600 border border-red-200' : 'badge-active')}"
+                          th:text="${c.estado}">
+                      PROGRAMADA
+                    </span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </div>
+    </main>
+</div>
+
+<!-- Toast Notificación -->
+<div id="toast-notification" class="toast-floating">
+    <i class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
+    <span id="toast-message" class="text-sm">Acción completada con éxito</span>
+</div>
+
+<!-- Scripts Interaccionales -->
+<script>
+    function triggerToast(message) {
+        const toast = document.getElementById('toast-notification');
+        const toastMsg = document.getElementById('toast-message');
+        if (toast && toastMsg) {
+            toastMsg.innerText = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3500);
+        }
+    }
+
+    function openChangePasswordModal() {
+        document.getElementById('passwordModal').classList.remove('hidden');
+    }
+
+    function closeChangePasswordModal() {
+        document.getElementById('passwordModal').classList.add('hidden');
+    }
+</script>
+</body>
+</html>

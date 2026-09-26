@@ -13,18 +13,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class InicioController {
 
-    @GetMapping("/")
+    @GetMapping({"/", "/home"})
     public String raiz(Authentication auth) {
-        // Si el usuario ya está autenticado y no es anónimo, lo enviamos a su panel
+        // Si el usuario SÍ está autenticado (y no es anónimo), lo mandamos a su panel
         if (auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken)) {
             return "redirect:" + RutasPorRol.inicioDe(auth);
         }
-        // Si no está autenticado, mostramos el Home público
-        return "home";
-    }
 
-    @GetMapping({"/", "/home"})
-    public String home() {
         return "home";
     }
 
