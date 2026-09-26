@@ -25,7 +25,7 @@ public class InicioController {
 
     @GetMapping("/cliente/citas")
     public String citasDelCliente() {
-        return "cliente/citas";
+        return "redirect:/cliente/dashboard?seccion=citas";
     }
 
     @GetMapping("/veterinario/agenda")
