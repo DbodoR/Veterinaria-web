@@ -24,4 +24,8 @@ public interface ClienteService {
     PerfilClienteDto consultarPerfil(Long idUsuario);
 
     PerfilClienteDto actualizarPerfil(Long idUsuario, PerfilClienteDto cambios);
+
+    void cambiarPassword(Long idUsuario, String passwordActual, String passwordNueva);
+
+    boolean debeCambiarPassword(Long idUsuario);
 }

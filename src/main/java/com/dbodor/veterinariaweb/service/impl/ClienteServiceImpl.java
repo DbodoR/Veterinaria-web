@@ -138,4 +138,37 @@ public class ClienteServiceImpl implements ClienteService {
                 guardado.getCiudad()
         );
     }
+
+    @Override
+    @Transactional
+    public void cambiarPassword(Long idUsuario, String passwordActual, String passwordNueva) {
+
+        if (passwordNueva == null || passwordNueva.length() < 8) {
+            throw new IllegalArgumentException("La contraseña debe tener al menos 8 caracteres");
+        }
+        if (!passwordNueva.matches(".*\\d.*")) {
+            throw new IllegalArgumentException("La contraseña debe contener al menos un número");
+        }
+
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado con id: " + idUsuario));
+
+        if (!passwordEncoder.matches(passwordActual, usuario.getContrasena())) {
+            throw new IllegalArgumentException("La contraseña actual es incorrecta");
+        }
+
+        usuario.setContrasena(passwordEncoder.encode(passwordNueva));
+        usuario.setDebeCambiarPassword(Boolean.FALSE);
+
+        usuarioRepository.save(usuario);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean debeCambiarPassword(Long idUsuario) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado con id: " + idUsuario));
+
+        return Boolean.TRUE.equals(usuario.getDebeCambiarPassword());
+    }
 }
