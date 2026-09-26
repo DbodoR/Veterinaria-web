@@ -10,7 +10,7 @@
 <body>
 
 <header class="barra">
-    <span class="marca">Veterinaria</span>
+    <a th:href="@{/admin}" class="marca">Veterinaria</a>
     <span class="sesion">
         <span sec:authentication="name">usuario</span>
         <form th:action="@{/logout}" method="post" class="en-linea">
@@ -23,6 +23,8 @@
 
     <!-- HU-21 CA2: cinco maestros, la pantalla de reservas y los dos reportes -->
     <nav class="menu">
+        <a th:href="@{/admin}">Panel principal</a>
+
         <p class="grupo">Maestros</p>
         <a th:href="@{/admin/clientes}">Clientes</a>
         <a th:href="@{/admin/veterinarios}">Veterinarios</a>
