@@ -312,3 +312,20 @@ button {
     margin: 0;
     accent-color: var(--acento);
 }
+
+/* El nombre del encabezado lleva al panel, pero conserva su aspecto. */
+a.marca {
+    color: inherit;
+    text-decoration: none;
+}
+a.marca:hover { color: var(--acento); }
+
+/* Enlace de regreso en la pantalla de acceso. */
+.volver-inicio {
+    display: block;
+    margin-top: 1rem;
+    text-align: center;
+    color: var(--acento);
+    text-decoration: none;
+}
+.volver-inicio:hover { text-decoration: underline; }

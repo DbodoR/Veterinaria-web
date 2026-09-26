@@ -9,7 +9,7 @@
 <body>
 
 <header class="barra">
-    <span class="marca">Veterinaria</span>
+    <a th:href="@{/admin}" class="marca">Veterinaria</a>
     <form th:action="@{/logout}" method="post" class="en-linea">
         <button type="submit" class="boton-enlace">Cerrar sesion</button>
     </form>
@@ -18,6 +18,8 @@
 <div class="disposicion">
 
     <nav class="menu">
+        <a th:href="@{/admin}">Panel principal</a>
+
         <p class="grupo">Maestros</p>
         <a th:href="@{/admin/clientes}">Clientes</a>
         <a th:href="@{/admin/veterinarios}">Veterinarios</a>
