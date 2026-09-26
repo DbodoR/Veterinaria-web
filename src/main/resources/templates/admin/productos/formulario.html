@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Registrar producto | Veterinaria</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+
+<header class="barra">
+    <span class="marca">Veterinaria</span>
+    <form th:action="@{/logout}" method="post" class="en-linea">
+        <button type="submit" class="boton-enlace">Cerrar sesion</button>
+    </form>
+</header>
+
+<div class="disposicion">
+
+    <nav class="menu">
+        <p class="grupo">Maestros</p>
+        <a th:href="@{/admin/clientes}">Clientes</a>
+        <a th:href="@{/admin/veterinarios}">Veterinarios</a>
+        <a th:href="@{/admin/mascotas}">Mascotas</a>
+        <a th:href="@{/admin/servicios}">Servicios</a>
+        <a th:href="@{/admin/productos}" class="activo">Productos</a>
+
+        <p class="grupo">Transaccional</p>
+        <a th:href="@{/admin/citas}">Reservas de citas</a>
+
+        <p class="grupo">Reportes</p>
+        <a th:href="@{/admin/reportes/citas}">Citas e ingresos</a>
+        <a th:href="@{/admin/reportes/historias}">Historias clinicas</a>
+    </nav>
+
+    <main class="contenido">
+        <h1>Registrar producto</h1>
+
+        <form th:action="@{/admin/productos}" th:object="${productoForm}" method="post" class="formulario">
+
+            <div class="alerta alerta-error" th:if="${#fields.hasGlobalErrors()}">
+                <p th:each="e : ${#fields.globalErrors()}" th:text="${e}">error</p>
+            </div>
+
+            <div class="campo">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" th:field="*{nombre}" maxlength="120">
+                <span class="error" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}">error</span>
+            </div>
+
+            <div class="campo">
+                <label for="presentacion">Presentacion</label>
+                <input type="text" id="presentacion" th:field="*{presentacion}" maxlength="120"
+                       placeholder="Ejemplo: Tabletas 250 mg">
+                <span class="error" th:if="${#fields.hasErrors('presentacion')}" th:errors="*{presentacion}">error</span>
+            </div>
+
+            <div class="fila">
+                <div class="campo">
+                    <label for="precioUnitario">Precio unitario</label>
+                    <input type="number" id="precioUnitario" th:field="*{precioUnitario}" step="100" min="1">
+                    <span class="error" th:if="${#fields.hasErrors('precioUnitario')}" th:errors="*{precioUnitario}">error</span>
+                </div>
+                <div class="campo">
+                    <label for="stock">Stock</label>
+                    <input type="number" id="stock" th:field="*{stock}" step="1" min="0">
+                    <span class="error" th:if="${#fields.hasErrors('stock')}" th:errors="*{stock}">error</span>
+                </div>
+            </div>
+
+            <div class="campo">
+                <label>
+                    <input type="checkbox" th:field="*{esRecetableVeterinario}">
+                    Requiere formula del veterinario
+                </label>
+            </div>
+
+            <div class="acciones">
+                <button type="submit">Guardar</button>
+                <a th:href="@{/admin/productos}" class="boton-enlace">Cancelar</a>
+            </div>
+        </form>
+    </main>
+</div>
+
+</body>
+</html>
