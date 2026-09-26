@@ -37,10 +37,38 @@
 
     <main class="contenido">
         <h1>Historias clinicas</h1>
-        <p class="vacio">
-            Este reporte se encuentra en desarrollo. Permitira consultar y descargar en PDF
-            la historia clinica de cada mascota.
-        </p>
+
+        <div class="alerta alerta-error" th:if="${mensajeError}" th:text="${mensajeError}"></div>
+
+        <form th:action="@{/admin/reportes/historias}" method="get" class="barra-busqueda">
+            <input type="text" name="buscar" th:value="${buscar}"
+                   placeholder="Buscar por mascota, dueno o documento">
+            <button type="submit">Buscar</button>
+            <a th:href="@{/admin/reportes/historias}" class="boton-enlace" th:if="${buscar != ''}">Limpiar</a>
+        </form>
+
+        <table class="tabla" th:if="${!mascotas.isEmpty()}">
+            <thead>
+            <tr>
+                <th>Mascota</th>
+                <th>Especie</th>
+                <th>Dueno</th>
+                <th>Documento</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="m : ${mascotas}">
+                <td th:text="${m.nombre}">Nombre</td>
+                <td th:text="${m.especie}">Especie</td>
+                <td th:text="${m.usuario.nombre}">Dueno</td>
+                <td th:text="${m.usuario.documento}">Documento</td>
+                <td><a th:href="@{/admin/reportes/historias/{id}(id=${m.idMascota})}" class="boton-enlace">Ver historia</a></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <p class="vacio" th:if="${mascotas.isEmpty()}">No hay mascotas para mostrar.</p>
     </main>
 </div>
 

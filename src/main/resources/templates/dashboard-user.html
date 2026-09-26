@@ -98,12 +98,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-full bg-[#0058BE] text-white flex items-center justify-center shadow-sm">
-                <i class="fa-solid fa-user text-xs"></i>
-            </div>
-        </div>
     </header>
 
     <!-- ÁREA PRINCIPAL -->
@@ -440,10 +434,6 @@
 
                 <div class="mt-4 flex items-center justify-between text-xs text-slate-500 px-1" th:if="${!#lists.isEmpty(mascotas)}">
                     <div>Mostrando <strong th:text="${#lists.size(mascotas)}">0</strong> mascotas registradas</div>
-                    <div class="flex items-center gap-2">
-                        <span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
-                        <span>Expedientes actualizados</span>
-                    </div>
                 </div>
 
                 <!-- Modal de Registro de Mascota (HU-11) -->
