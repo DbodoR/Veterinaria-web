@@ -4,6 +4,9 @@ import com.dbodor.veterinariaweb.model.Cita;
 import com.dbodor.veterinariaweb.model.Servicio;
 import com.dbodor.veterinariaweb.model.Veterinario;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.data.repository.query.Param;
+import java.time.LocalDate;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -38,4 +41,36 @@ public interface CitaRepository extends JpaRepository<Cita, Long> {
             order by c.fechaCita desc, c.horaCita desc
             """)
     List<Cita> listarConDetalle();
+
+    /**
+     * Historial de citas de un cliente con relaciones cargadas para la vista del portal.
+     */
+    @Query("""
+        select c from Cita c
+          join fetch c.mascota m
+          join fetch m.usuario u
+          join fetch c.servicio s
+          join fetch c.veterinario v
+          join fetch v.usuario
+        where u.idUsuario = :idUsuario
+        order by c.fechaCita desc, c.horaCita desc
+        """)
+    List<Cita> listarPorClienteConDetalle(@Param("idUsuario") Long idUsuario);
+
+        /**
+     * Reporte de citas e ingresos (HU-26). Ambas fechas inclusivas. Trae las
+     * relaciones que muestra la tabla, porque open-in-view esta desactivado.
+     */
+    @Query("""
+            select c from Cita c
+              join fetch c.mascota m
+              join fetch m.usuario
+              join fetch c.servicio
+              join fetch c.veterinario
+            where c.fechaCita between :desde and :hasta
+            order by c.fechaCita asc, c.horaCita asc
+            """)
+    List<Cita> reportePorRango(@Param("desde") LocalDate desde, @Param("hasta") LocalDate hasta);
+
+    
 }

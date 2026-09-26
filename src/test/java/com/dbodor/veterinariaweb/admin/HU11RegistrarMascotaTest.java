@@ -281,7 +281,7 @@ class HU11RegistrarMascotaTest {
     @DisplayName("Acceso - un cliente no entra al alta de mascotas del administrador")
     void clienteNoEntra() throws Exception {
         mockMvc.perform(get("/admin/mascotas/nueva"))
-                .andExpect(redirectedUrl("/cliente/citas"));
+                .andExpect(redirectedUrl("/cliente/dashboard"));
     }
 
     @Test

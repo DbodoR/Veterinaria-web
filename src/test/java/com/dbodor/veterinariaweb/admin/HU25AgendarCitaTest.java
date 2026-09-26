@@ -319,7 +319,7 @@ class HU25AgendarCitaTest {
     @DisplayName("Acceso - un cliente no entra a la pantalla de reservas del administrador")
     void clienteNoAccede() throws Exception {
         mockMvc.perform(get("/admin/citas"))
-                .andExpect(redirectedUrl("/cliente/citas"));
+                .andExpect(redirectedUrl("/cliente/dashboard"));
     }
 
     @Test

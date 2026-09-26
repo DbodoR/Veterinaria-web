@@ -252,7 +252,7 @@ class HU16CrearServicioTest {
     @DisplayName("Acceso - un cliente no entra al maestro de servicios")
     void clienteNoEntra() throws Exception {
         mockMvc.perform(get("/admin/servicios"))
-                .andExpect(redirectedUrl("/cliente/citas"));
+                .andExpect(redirectedUrl("/cliente/dashboard"));
     }
 
     @Test

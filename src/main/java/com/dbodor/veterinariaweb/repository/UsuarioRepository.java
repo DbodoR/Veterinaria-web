@@ -22,11 +22,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     boolean existsByDocumento(String documento);
 
-    /* Igual que los anteriores pero ignorando al propio usuario que se edita (HU-03). */
-    boolean existsByCorreoIgnoreCaseAndIdUsuarioNot(String correo, Long idUsuario);
-
-    boolean existsByDocumentoAndIdUsuarioNot(String documento, Long idUsuario);
-
     /* Resumen del panel (HU-21). */
     long countByRolAndEstado(RolUsuario rol, EstadoUsuario estado);
 
@@ -42,4 +37,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
             order by u.nombre asc
             """)
     List<Usuario> buscarPorRol(@Param("rol") RolUsuario rol, @Param("texto") String texto);
+
+    boolean existsByCorreoAndIdUsuarioNot(String correo, Long idUsuario);
 }

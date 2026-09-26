@@ -190,7 +190,7 @@ class HU12ConsultarMascotasTest {
     @DisplayName("CA4 - un cliente no entra al maestro de mascotas")
     void clienteNoEntra() throws Exception {
         mockMvc.perform(get("/admin/mascotas"))
-                .andExpect(redirectedUrl("/cliente/citas"));
+                .andExpect(redirectedUrl("/cliente/dashboard"));
     }
 
     @Test

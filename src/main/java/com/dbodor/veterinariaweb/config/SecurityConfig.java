@@ -41,8 +41,10 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(auth -> auth
                 // Recursos publicos
-                .requestMatchers("/", "/login", "/css/**", "/js/**", "/img/**", "/webjars/**")
+                .requestMatchers("/","/home", "/login", "/css/**", "/js/**", "/img/**", "/webjars/**")
                     .permitAll()
+                // Pantalla de cambio de clave forzado (requiere sesión activa)
+                .requestMatchers("/cambiar-password").authenticated()
                 // Cada zona exige su rol (HU-21 CA4)
                 .requestMatchers("/admin/**").hasRole("ADMINISTRADOR")
                 .requestMatchers("/veterinario/**").hasRole("VETERINARIO")
