@@ -1,0 +1,233 @@
+:root {
+    /* Paleta Base y Superficies */
+    --bg-surface: #FAF8FF;
+    --bg-surface-lowest: #FFFFFF;
+    --bg-surface-low: #F2F3FF;
+    --bg-surface-container: #EAEDFF;
+    --bg-surface-slate: #F8FAFC;
+    --bg-surface-mint: #F0FDF4;
+    --ice-blue: #E0F2FE;
+
+    /* Colores de Acento y Marca */
+    --primary: #0058BE;
+    --primary-hover: #004395;
+    --blue-contrast: #1E40AF;
+    --secondary: #006C49;
+    --secondary-hover: #059669;
+    --secondary-container: #6CF8BB;
+    --on-secondary-container: #00714D;
+
+    /* Textos y Bordes */
+    --on-surface: #131B2E;
+    --on-surface-variant: #424754;
+    --text-muted: #475569;
+    --border-subtle: #E2E8F0;
+    --border-hover: #93C5FD;
+}
+
+/* Reset y Base */
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    scroll-behavior: smooth;
+    background-color: var(--bg-surface);
+    color: var(--on-surface);
+    font-family: 'Work Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+main > :first-child { margin-top: 0 !important; }
+main > :last-child { margin-bottom: 0 !important; }
+
+/* Tipografía */
+.font-headline {
+    font-family: 'Epilogue', sans-serif;
+}
+
+/* Layout y Contenedores */
+.container-custom {
+    max-width: 80rem; /* 1280px */
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+/* Navbar */
+.site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 72px;
+    z-index: 50;
+    background-color: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+}
+
+.site-header .nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.nav-link {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: var(--primary);
+}
+
+/* Botones */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.btn-primary-green {
+    background-color: var(--secondary);
+    color: #FFFFFF;
+    padding: 0.875rem 2rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 108, 73, 0.2);
+}
+
+.btn-primary-green:hover {
+    background-color: var(--secondary-hover);
+    transform: translateY(-2px);
+}
+
+.btn-outline {
+    border: 1px solid var(--border-subtle);
+    color: var(--primary);
+    background-color: transparent;
+    padding: 0.5rem 1.25rem;
+    border-radius: 9999px;
+}
+
+.btn-outline:hover {
+    border-color: var(--border-hover);
+    background-color: var(--bg-surface-slate);
+}
+
+.btn-white {
+    background-color: #FFFFFF;
+    color: var(--secondary);
+    padding: 0.875rem 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.btn-white:hover {
+    background-color: var(--bg-surface-mint);
+    transform: translateY(-2px);
+}
+
+.btn-outline-white {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #FFFFFF;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 0.875rem 1.75rem;
+}
+
+.btn-outline-white:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Badges */
+.badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.875rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.badge-blue {
+    background-color: var(--bg-surface-low);
+    color: var(--blue-contrast);
+}
+
+.badge-mint {
+    background-color: var(--bg-surface-mint);
+    color: var(--secondary);
+}
+
+/* Cards de Servicios */
+.service-card {
+    background-color: var(--bg-surface-lowest);
+    border-radius: 1rem;
+    padding: 1.75rem;
+    border: 1px solid var(--border-subtle);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.service-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08);
+    border-color: var(--border-hover);
+}
+
+.service-icon-box {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+/* Banner de Urgencias CTA */
+.cta-banner {
+    background: linear-gradient(135deg, var(--secondary) 0%, var(--on-secondary-container) 100%);
+    border-radius: 1.5rem;
+    padding: 3.5rem 2rem;
+    color: #FFFFFF;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 25px -5px rgba(0, 108, 73, 0.25);
+}
+
+/* Footer */
+.site-footer {
+    background-color: var(--bg-surface-slate);
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 4rem;
+    padding-bottom: 2.5rem;
+    color: var(--on-surface-variant);
+}

@@ -1,6 +1,7 @@
 package com.dbodor.veterinariaweb.service;
 
 import com.dbodor.veterinariaweb.dto.ClienteForm;
+import com.dbodor.veterinariaweb.dto.PerfilClienteDto;
 import com.dbodor.veterinariaweb.model.Usuario;
 
 import java.util.List;
@@ -19,4 +20,12 @@ public interface ClienteService {
 
     /** Alta de un cliente nuevo con su contrasena temporal. */
     AltaCliente registrar(ClienteForm form);
+
+    PerfilClienteDto consultarPerfil(Long idUsuario);
+
+    PerfilClienteDto actualizarPerfil(Long idUsuario, PerfilClienteDto cambios);
+
+    void cambiarPassword(Long idUsuario, String passwordActual, String passwordNueva);
+
+    boolean debeCambiarPassword(Long idUsuario);
 }

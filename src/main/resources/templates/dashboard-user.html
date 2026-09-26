@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>VetCare Plus - Portal Cliente</title>
+
+    <!-- Fuentes e Iconos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+    <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@600;700;800&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Hoja de estilos del Dashboard Cliente -->
+    <link rel="stylesheet" th:href="@{/css/dashboard-cliente.css}"/>
+</head>
+<body class="bg-[#F8FAFC] antialiased">
+
+<!-- ==================== SIDEBAR LATERAL ==================== -->
+<aside class="fixed left-0 top-0 h-full w-72 bg-white shadow-sm z-50 flex flex-col justify-between py-6 px-4 border-r border-[#E2E8F0]">
+    <div class="flex flex-col gap-8">
+
+        <!-- Brand Logo -->
+        <div class="flex items-center gap-3 px-2">
+            <a th:href="@{/cliente/dashboard(seccion='mascotas')}" class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#006C49] text-3xl" style="font-variation-settings: 'FILL' 1;">pets</span>
+                <div class="flex flex-col">
+                    <span class="font-headline text-xl font-bold text-slate-800 leading-none">VetCare</span>
+                    <span class="text-[11px] font-bold text-[#006C49] uppercase tracking-wider mt-1">Portal Cliente</span>
+                </div>
+            </a>
+        </div>
+
+        <!-- Menú de Navegación -->
+        <nav class="flex flex-col gap-1.5">
+            <a th:href="@{/cliente/dashboard(seccion='cuenta')}"
+               class="nav-item"
+               th:classappend="${seccion == 'cuenta'} ? 'active' : ''">
+                <i class="fa-regular fa-address-card text-base"></i>
+                <span>Datos de la cuenta</span>
+            </a>
+
+            <a th:href="@{/cliente/dashboard(seccion='mascotas')}"
+               class="nav-item"
+               th:classappend="${seccion == 'mascotas' or seccion == null} ? 'active' : ''">
+                <i class="fa-solid fa-paw text-base"></i>
+                <span>Mis Mascotas</span>
+            </a>
+
+            <a th:href="@{/cliente/dashboard(seccion='citas')}"
+               class="nav-item"
+               th:classappend="${seccion == 'citas'} ? 'active' : ''">
+                <i class="fa-regular fa-calendar-check text-base"></i>
+                <span>Citas y Consultas</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Perfil del Usuario y Logout -->
+    <div class="flex flex-col gap-3 bg-[#F2F3FF] rounded-2xl p-3 border border-[#E2E8F0]">
+        <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-full bg-[#0058BE] text-white flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-user text-xs"></i>
+            </div>
+            <div class="flex flex-col min-w-0 flex-1">
+                <span class="text-sm font-semibold text-slate-800 truncate"
+                      th:text="${usuario != null ? usuario.nombre : 'Usuario'}">Carlos Mendoza</span>
+                <span class="text-xs text-slate-500 truncate"
+                      th:text="${usuario != null ? usuario.correo : 'correo@example.com'}">carlos.vet@example.com</span>
+            </div>
+        </div>
+
+        <form th:action="@{/logout}" method="post" class="w-full m-0">
+            <button type="submit" class="flex items-center justify-center gap-1.5 w-full py-1.5 px-3 rounded-full text-red-600 hover:bg-red-50 text-xs font-semibold transition-all">
+                <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i>
+                <span>Cerrar sesión</span>
+            </button>
+        </form>
+    </div>
+</aside>
+
+<!-- ==================== CONTENEDOR DERECHO ==================== -->
+<div class="pl-72 flex flex-col min-h-screen">
+
+    <!-- HEADER SUPERIOR -->
+    <header class="fixed top-0 left-72 right-0 h-20 bg-white/90 backdrop-blur-xl shadow-sm border-b border-[#E2E8F0] z-40 flex items-center justify-between px-8">
+        <div class="flex items-center gap-3">
+            <div class="flex flex-col">
+                <span class="font-headline text-lg font-bold text-slate-800"
+                      th:text="'¡Hola, ' + (${usuario != null ? usuario.nombre : 'Usuario'}) + '!'">¡Hola, Carlos!</span>
+                <div class="flex items-center gap-1.5">
+                    <span class="inline-block w-2 h-2 rounded-full bg-[#006C49]"></span>
+                    <span class="text-xs text-slate-500">Sesión activa • Paciente preferente</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-[#0058BE] text-white flex items-center justify-center shadow-sm">
+                <i class="fa-solid fa-user text-xs"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- ÁREA PRINCIPAL -->
+    <main class="relative w-full pt-20 px-8 pb-12 flex-1">
+        <div class="flex flex-col w-full py-6">
+
+            <!-- RESUMEN MÉTRICO SUPERIOR -->
+            <div class="grid grid-cols-1 gap-6 mb-8 md:grid-cols-3">
+                <!-- Card Mascotas -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-[#E2E8F0] flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-emerald-50 text-[#006C49] flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-paw text-xl"></i>
+                    </div>
+                    <div class="flex flex-col min-w-0">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Mascotas activas</span>
+                        <div class="flex items-baseline gap-1 mt-0.5">
+                            <span class="font-headline text-2xl font-bold text-slate-800" th:text="${totalMascotas != null ? totalMascotas : 0}">0</span>
+                            <span class="text-xs text-[#006C49] font-bold">registradas</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Próxima Consulta -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-[#E2E8F0] flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-blue-50 text-[#0058BE] flex items-center justify-center shrink-0">
+                        <i class="fa-regular fa-calendar-check text-xl"></i>
+                    </div>
+                    <div class="flex flex-col min-w-0">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Próxima Consulta</span>
+                        <span class="text-sm font-semibold text-slate-800 truncate mt-0.5"
+                              th:text="${proximaCita != null} ? ${#temporals.format(proximaCita.fechaCita, 'dd MMM') + ' - ' + proximaCita.mascota.nombre} : 'Sin citas pendientes'">
+                            Sin citas pendientes
+                        </span>
+                        <span class="text-xs text-[#0058BE] font-medium"
+                              th:if="${proximaCita != null}"
+                              th:text="${proximaCita.servicio.nombre}">
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Card Estado de Cuenta -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-[#E2E8F0] flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-[#EAEDFF] text-[#0058BE] flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-shield-cat text-xl"></i>
+                    </div>
+                    <div class="flex flex-col min-w-0">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Estado de cuenta</span>
+                        <span class="text-sm font-semibold text-slate-800 truncate mt-0.5" th:text="${usuario != null ? usuario.estado : 'ACTIVO'}">ACTIVO</span>
+                        <span class="text-xs text-emerald-600 font-medium">Servicios al día</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================== -->
+            <!-- SECCIÓN 1: DATOS DE LA CUENTA (HU-03 y HU-05)                   -->
+            <!-- ============================================================== -->
+            <section th:if="${seccion == 'cuenta'}" class="w-full bg-white rounded-3xl border border-[#E2E8F0] shadow-sm p-6 sm:p-10 transition-all">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 mb-8 border-b border-[#E2E8F0] gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-blue-50 text-[#0058BE] flex items-center justify-center text-lg shadow-sm">
+                            <i class="fa-solid fa-address-card"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight font-headline">Datos de la cuenta</h1>
+                            <p class="text-sm text-slate-500 mt-0.5">Consulta y edita tu información personal de contacto</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alertas de perfil -->
+                <div class="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-medium flex items-center gap-2" th:if="${mensajeExito}">
+                    <i class="fa-solid fa-circle-check text-emerald-600"></i>
+                    <span th:text="${mensajeExito}"></span>
+                </div>
+                <div class="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-800 text-sm font-medium flex items-center gap-2" th:if="${mensajeError}">
+                    <i class="fa-solid fa-circle-exclamation text-red-600"></i>
+                    <span th:text="${mensajeError}"></span>
+                </div>
+
+                <!-- Formulario HU-03: Editar perfil -->
+                <form th:action="@{/cliente/cuenta}" th:object="${perfilForm}" method="post" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                        <!-- Nombre Completo -->
+                        <div class="space-y-1.5">
+                            <label for="nombre" class="block text-xs font-bold uppercase tracking-wider text-slate-600">
+                                Nombre Completo <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                    <i class="fa-regular fa-user"></i>
+                                </div>
+                                <input type="text" id="nombre" th:field="*{nombre}"
+                                       class="w-full pl-10 pr-4 py-3 bg-white text-slate-800 text-sm font-medium rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500">
+                            </div>
+                            <span class="text-xs text-red-600 font-semibold" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></span>
+                        </div>
+
+                        <!-- Documento de Identidad (Solo lectura) -->
+                        <div class="space-y-1.5">
+                            <label for="documento" class="block text-xs font-bold uppercase tracking-wider text-slate-600">
+                                Documento de Identidad (No editable)
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                    <i class="fa-regular fa-id-card"></i>
+                                </div>
+                                <input type="text" id="documento" th:field="*{documento}" readonly
+                                       class="w-full pl-10 pr-4 py-3 bg-slate-100 text-slate-600 text-sm font-medium rounded-xl border border-slate-200 outline-none cursor-not-allowed">
+                            </div>
+                        </div>
+
+                        <!-- Correo Electrónico -->
+                        <div class="space-y-1.5">
+                            <label for="correo" class="block text-xs font-bold uppercase tracking-wider text-slate-600">
+                                Correo Electrónico <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                    <i class="fa-regular fa-envelope"></i>
+                                </div>
+                                <input type="email" id="correo" th:field="*{correo}"
+                                       class="w-full pl-10 pr-4 py-3 bg-white text-slate-800 text-sm font-medium rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500">
+                            </div>
+                            <span class="text-xs text-red-600 font-semibold" th:if="${#fields.hasErrors('correo')}" th:errors="*{correo}"></span>
+                        </div>
+
+                        <!-- Teléfono -->
+                        <div class="space-y-1.5">
+                            <label for="telefono" class="block text-xs font-bold uppercase tracking-wider text-slate-600">
+                                Teléfono de Contacto <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                    <i class="fa-solid fa-phone text-xs"></i>
+                                </div>
+                                <input type="tel" id="telefono" th:field="*{telefono}"
+                                       class="w-full pl-10 pr-4 py-3 bg-white text-slate-800 text-sm font-medium rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500">
+                            </div>
+                            <span class="text-xs text-red-600 font-semibold" th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"></span>
+                        </div>
+
+                        <!-- Dirección -->
+                        <div class="space-y-1.5">
+                            <label for="direccion" class="block text-xs font-bold uppercase tracking-wider text-slate-600">
+                                Dirección de Residencia
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                    <i class="fa-regular fa-map"></i>
+                                </div>
+                                <input type="text" id="direccion" th:field="*{direccion}"
+                                       class="w-full pl-10 pr-4 py-3 bg-white text-slate-800 text-sm font-medium rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500">
+                            </div>
+                        </div>
+
+                        <!-- Ciudad -->
+                        <div class="space-y-1.5">
+                            <label for="ciudad" class="block text-xs font-bold uppercase tracking-wider text-slate-600">
+                                Ciudad
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                    <i class="fa-regular fa-building"></i>
+                                </div>
+                                <input type="text" id="ciudad" th:field="*{ciudad}"
+                                       class="w-full pl-10 pr-4 py-3 bg-white text-slate-800 text-sm font-medium rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500">
+                            </div>
+                        </div>
+
+                        <!-- Botón Guardar Perfil -->
+                        <div class="md:col-span-2 flex justify-end pt-2">
+                            <button type="submit" class="px-6 py-2.5 bg-[#0058BE] hover:bg-blue-700 text-white text-sm font-bold rounded-xl shadow-sm transition-all flex items-center gap-2">
+                                <i class="fa-solid fa-floppy-disk"></i>
+                                <span>Guardar Cambios de Perfil</span>
+                            </button>
+                        </div>
+
+                        <!-- Rol, Estado y Botón de Contraseña -->
+                        <div class="space-y-1.5 md:col-span-2 pt-4">
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 flex flex-wrap items-center justify-between gap-4">
+                                <div>
+                                    <span class="text-xs font-bold uppercase tracking-wider text-slate-500 block">Tipo de Perfil</span>
+                                    <span class="text-sm font-bold text-slate-800" th:text="${usuario.rol}">CLIENTE</span>
+                                </div>
+                                <div>
+                                    <span class="text-xs font-bold uppercase tracking-wider text-slate-500 block">Estado del Usuario</span>
+                                    <span class="badge-pill badge-active" th:text="${usuario.estado}">ACTIVO</span>
+                                </div>
+                                <button type="button" onclick="openChangePasswordModal()" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-200 text-xs font-semibold rounded-xl transition-all shadow-sm">
+                                    <i class="fa-solid fa-key text-xs"></i>
+                                    <span>Modificar Contraseña</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Modal / Caja Desplegable de Cambio de Contraseña (HU-05) -->
+                <div id="passwordModal" th:class="${mensajeErrorPassword != null or mensajeExitoPassword != null} ? 'mt-6 pt-6 border-t border-dashed border-slate-200 bg-slate-50/70 -mx-6 sm:-mx-10 px-6 sm:px-10 pb-6 rounded-b-3xl' : 'hidden mt-6 pt-6 border-t border-dashed border-slate-200 bg-slate-50/70 -mx-6 sm:-mx-10 px-6 sm:px-10 pb-6 rounded-b-3xl'">
+                    <form th:action="@{/cliente/cambiar-password}" method="post" class="max-w-md space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-shield-halved text-[#0058BE]"></i>
+                                Actualizar tu contraseña
+                            </h3>
+                            <button type="button" onclick="closeChangePasswordModal()" class="text-slate-400 hover:text-slate-600 text-xs">
+                                <i class="fa-solid fa-xmark text-sm"></i>
+                            </button>
+                        </div>
+
+                        <!-- Feedback Contraseña -->
+                        <div class="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-lg" th:if="${mensajeErrorPassword}" th:text="${mensajeErrorPassword}"></div>
+                        <div class="p-3 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs rounded-lg" th:if="${mensajeExitoPassword}" th:text="${mensajeExitoPassword}"></div>
+
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Contraseña actual</label>
+                                <input type="password" name="passwordActual" required placeholder="Ingresa tu clave actual" class="w-full px-3 py-2 text-sm bg-white rounded-lg border border-slate-200 focus:outline-none focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Nueva contraseña (mínimo 8 caracteres y 1 número)</label>
+                                <input type="password" name="passwordNueva" required placeholder="Nueva contraseña" class="w-full px-3 py-2 text-sm bg-white rounded-lg border border-slate-200 focus:outline-none focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Confirmar nueva contraseña</label>
+                                <input type="password" name="confirmacionPassword" required placeholder="Repite la nueva contraseña" class="w-full px-3 py-2 text-sm bg-white rounded-lg border border-slate-200 focus:outline-none focus:border-blue-500">
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2 pt-2">
+                            <button type="submit" class="px-4 py-2 bg-[#0058BE] hover:bg-blue-700 text-white text-xs font-bold rounded-lg shadow-sm">
+                                Guardar nueva clave
+                            </button>
+                            <button type="button" onclick="closeChangePasswordModal()" class="px-3 py-2 text-slate-500 hover:text-slate-700 text-xs font-semibold">
+                                Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SECCIÓN 2: MIS MASCOTAS (HU-11 y HU-12)                        -->
+            <!-- ============================================================== -->
+            <section th:if="${seccion == 'mascotas' or seccion == null}" class="w-full bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-slate-100">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-100">
+                    <div>
+                        <div class="flex items-center gap-3">
+                            <h2 class="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight font-headline">Mis Mascotas</h2>
+                            <span class="badge-pill badge-active">REGISTRO AL DÍA</span>
+                        </div>
+                        <p class="mt-1 text-sm md:text-base text-slate-500">
+                            Expedientes sanitarios y datos clínicos de tus animales de compañía.
+                        </p>
+                    </div>
+                    <!-- Botón para Registrar Mascota (HU-11) -->
+                    <button type="button" onclick="openMascotaModal()" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#006C49] hover:bg-[#00583b] text-white text-sm font-semibold rounded-xl shadow-sm transition-all">
+                        <i class="fa-solid fa-plus text-xs"></i>
+                        <span>Registrar Mascota</span>
+                    </button>
+                </div>
+
+                <!-- Alertas de Mascota -->
+                <div class="mt-4 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-medium flex items-center gap-2" th:if="${mensajeExitoMascota}">
+                    <i class="fa-solid fa-circle-check text-emerald-600"></i>
+                    <span th:text="${mensajeExitoMascota}"></span>
+                </div>
+                <div class="mt-4 p-4 rounded-xl bg-red-50 border border-red-200 text-red-800 text-sm font-medium flex items-center gap-2" th:if="${mensajeErrorMascota}">
+                    <i class="fa-solid fa-circle-exclamation text-red-600"></i>
+                    <span th:text="${mensajeErrorMascota}"></span>
+                </div>
+
+                <!-- Tabla de Mascotas (HU-12) -->
+                <div class="mt-6 overflow-x-auto rounded-2xl border border-slate-100 bg-[#FBFCFE]">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                        <tr class="text-[11px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-100 bg-slate-50/50">
+                            <th class="py-3.5 px-5">Mascota</th>
+                            <th class="py-3.5 px-5">Especie</th>
+                            <th class="py-3.5 px-5">Raza</th>
+                            <th class="py-3.5 px-5">Edad Calculada</th>
+                            <th class="py-3.5 px-5">Sexo</th>
+                            <th class="py-3.5 px-5">Peso</th>
+                            <th class="py-3.5 px-5">Estado</th>
+                        </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-sm">
+                        <!-- HU-12 CA3: Si no tiene mascotas, invitación a registrar la primera -->
+                        <tr th:if="${#lists.isEmpty(mascotas)}">
+                            <td colspan="7" class="py-12 text-center">
+                                <div class="flex flex-col items-center justify-center gap-3">
+                                    <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center">
+                                        <i class="fa-solid fa-paw text-xl"></i>
+                                    </div>
+                                    <p class="text-sm font-semibold text-slate-700">No tienes mascotas registradas en tu cuenta.</p>
+                                    <p class="text-xs text-slate-400 -mt-1">Registra a tu mascota para acceder a consultas, vacunas y control médico.</p>
+                                    <button type="button" onclick="openMascotaModal()" class="mt-2 px-4 py-2 bg-[#006C49] hover:bg-[#00583b] text-white text-xs font-bold rounded-lg shadow-sm">
+                                        Registrar mi primera mascota
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- HU-12 CA1 y CA2: Iteración con nombre, especie, raza, edad calculada y estado -->
+                        <tr th:each="m : ${mascotas}" class="hover:bg-blue-50/30 transition-colors">
+                            <td class="py-4 px-5">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-full bg-emerald-100 text-[#006C49] flex items-center justify-center font-bold text-sm">
+                                        <span th:text="${#strings.substring(m.nombre, 0, 1)}">M</span>
+                                    </div>
+                                    <div>
+                                        <div class="font-bold text-slate-900 text-base" th:text="${m.nombre}">Nombre</div>
+                                        <div class="text-xs text-slate-400" th:text="'ID: #' + ${m.idMascota}">#1</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-4 px-5">
+                                <span class="badge-pill" th:text="${m.especie}">CANINO</span>
+                            </td>
+                            <td class="py-4 px-5 text-slate-700" th:text="${m.raza != null and !m.raza.isBlank() ? m.raza : 'Sin especificar'}">Criollo</td>
+                            <td class="py-4 px-5 font-medium text-slate-800" th:text="${m.edad}">3 años</td>
+                            <td class="py-4 px-5">
+                                <span class="text-xs font-semibold text-slate-600" th:text="${m.sexo == 'M' ? 'Macho' : 'Hembra'}">Macho</span>
+                            </td>
+                            <td class="py-4 px-5 text-slate-700" th:text="${m.pesoKg != null ? m.pesoKg + ' kg' : 'N/A'}">12 kg</td>
+                            <td class="py-4 px-5">
+                                <span class="badge-pill badge-active" th:text="${m.estado}">ACTIVO</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-4 flex items-center justify-between text-xs text-slate-500 px-1" th:if="${!#lists.isEmpty(mascotas)}">
+                    <div>Mostrando <strong th:text="${#lists.size(mascotas)}">0</strong> mascotas registradas</div>
+                    <div class="flex items-center gap-2">
+                        <span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
+                        <span>Expedientes actualizados</span>
+                    </div>
+                </div>
+
+                <!-- Modal de Registro de Mascota (HU-11) -->
+                <div id="modalMascota" th:class="${abrirModalMascota == true} ? 'fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm' : 'hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm'">
+                    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-200">
+                        <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
+                            <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2 font-headline">
+                                <i class="fa-solid fa-paw text-[#006C49]"></i>
+                                Registrar Mascota
+                            </h3>
+                            <button type="button" onclick="closeMascotaModal()" class="text-slate-400 hover:text-slate-600">
+                                <i class="fa-solid fa-xmark text-lg"></i>
+                            </button>
+                        </div>
+
+                        <form th:action="@{/cliente/mascotas}" th:object="${mascotaForm}" method="post" class="space-y-4">
+                            <!-- Campo oculto idCliente -->
+                            <input type="hidden" name="idCliente" th:value="${usuario.idUsuario}"/>
+
+                            <!-- Nombre -->
+                            <div>
+                                <label for="mNombre" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
+                                    Nombre de la mascota <span class="text-red-500">*</span>
+                                </label>
+                                <input type="text" id="mNombre" th:field="*{nombre}" placeholder="Ej: Firulais" maxlength="80"
+                                       class="w-full px-3 py-2 text-sm bg-slate-50 rounded-xl border border-slate-200 focus:bg-white focus:outline-none focus:border-emerald-600"/>
+                                <span class="text-xs text-red-600 font-semibold" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></span>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <!-- Especie (HU-11 CA3: Lista cerrada) -->
+                                <div>
+                                    <label for="mEspecie" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
+                                        Especie <span class="text-red-500">*</span>
+                                    </label>
+                                    <select id="mEspecie" th:field="*{especie}" class="w-full px-3 py-2 text-sm bg-slate-50 rounded-xl border border-slate-200 focus:bg-white focus:outline-none focus:border-emerald-600">
+                                        <option value="">Seleccione</option>
+                                        <option th:each="esp : ${especies}" th:value="${esp}" th:text="${esp}"></option>
+                                    </select>
+                                    <span class="text-xs text-red-600 font-semibold" th:if="${#fields.hasErrors('especie')}" th:errors="*{especie}"></span>
+                                </div>
+
+                                <!-- Raza -->
+                                <div>
+                                    <label for="mRaza" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
+                                        Raza (opcional)
+                                    </label>
+                                    <input type="text" id="mRaza" th:field="*{raza}" placeholder="Ej: Criollo" maxlength="80"
+                                           class="w-full px-3 py-2 text-sm bg-slate-50 rounded-xl border border-slate-200 focus:bg-white focus:outline-none focus:border-emerald-600"/>
+                                    <span class="text-xs text-red-600 font-semibold" th:if="${#fields.hasErrors('raza')}" th:errors="*{raza}"></span>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <!-- Sexo -->
+                                <div>
+                                    <label for="mSexo" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
+                                        Sexo <span class="text-red-500">*</span>
+                                    </label>
+                                    <select id="mSexo" th:field="*{sexo}" class="w-full px-3 py-2 text-sm bg-slate-50 rounded-xl border border-slate-200 focus:bg-white focus:outline-none focus:border-emerald-600">
+                                        <option value="">Seleccione</option>
+                                        <option value="M">Macho</option>
+                                        <option value="H">Hembra</option>
+                                    </select>
+                                    <span class="text-xs text-red-600 font-semibold" th:if="${#fields.hasErrors('sexo')}" th:errors="*{sexo}"></span>
+                                </div>
+
+                                <!-- Fecha de Nacimiento (HU-11 CA4: No futura) -->
+                                <div>
+                                    <label for="mFechaNacimiento" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
+                                        Nacimiento <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="date" id="mFechaNacimiento" th:field="*{fechaNacimiento}"
+                                           class="w-full px-3 py-2 text-sm bg-slate-50 rounded-xl border border-slate-200 focus:bg-white focus:outline-none focus:border-emerald-600"/>
+                                    <span class="text-xs text-red-600 font-semibold" th:if="${#fields.hasErrors('fechaNacimiento')}" th:errors="*{fechaNacimiento}"></span>
+                                </div>
+
+                                <!-- Peso en Kg (HU-11 CA5: Positivo) -->
+                                <div>
+                                    <label for="mPesoKg" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
+                                        Peso (kg) <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="number" id="mPesoKg" th:field="*{pesoKg}" step="0.1" min="0.1" placeholder="Ej: 8.5"
+                                           class="w-full px-3 py-2 text-sm bg-slate-50 rounded-xl border border-slate-200 focus:bg-white focus:outline-none focus:border-emerald-600"/>
+                                    <span class="text-xs text-red-600 font-semibold" th:if="${#fields.hasErrors('pesoKg')}" th:errors="*{pesoKg}"></span>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                                <button type="button" onclick="closeMascotaModal()" class="px-4 py-2 text-slate-600 hover:text-slate-800 text-sm font-semibold">
+                                    Cancelar
+                                </button>
+                                <button type="submit" class="px-5 py-2 bg-[#006C49] hover:bg-[#00583b] text-white text-sm font-bold rounded-xl shadow-sm transition-all">
+                                    Guardar Mascota
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================== -->
+            <!-- SECCIÓN 3: CITAS Y CONSULTAS (HISTORIAL Y AGENDAMIENTO)         -->
+            <!-- ============================================================== -->
+            <section th:if="${seccion == 'citas'}" class="w-full bg-white rounded-3xl border border-slate-100 shadow-sm p-6 md:p-9 transition-all">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-7 border-b border-slate-100">
+                    <div>
+                        <div class="flex items-center gap-3">
+                            <h1 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight font-headline">Citas y Consultas</h1>
+                            <span class="badge-pill badge-active">HISTORIAL</span>
+                        </div>
+                        <p class="text-sm md:text-base text-slate-500 mt-1">Revisa tus atenciones anteriores o agenda un turno médico para tus mascotas.</p>
+                    </div>
+
+                    <!-- Botón para agendar cita -->
+                    <button type="button" onclick="openCitaModal()" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#0058BE] hover:bg-blue-700 text-white text-sm font-semibold rounded-xl shadow-sm transition-all">
+                        <i class="fa-regular fa-calendar-plus text-xs"></i>
+                        <span>Agendar Nueva Cita</span>
+                    </button>
+                </div>
+
+                <!-- Alertas de Cita -->
+                <div class="mt-4 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-medium flex items-center gap-2" th:if="${mensajeExitoCita}">
+                    <i class="fa-solid fa-circle-check text-emerald-600"></i>
+                    <span th:text="${mensajeExitoCita}"></span>
+                </div>
+                <div class="mt-4 p-4 rounded-xl bg-red-50 border border-red-200 text-red-800 text-sm font-medium flex items-center gap-2" th:if="${mensajeErrorCita}">
+                    <i class="fa-solid fa-circle-exclamation text-red-600"></i>
+                    <span th:text="${mensajeErrorCita}"></span>
+                </div>
+
+                <!-- Tabla Citas -->
+                <div class="mt-6 overflow-x-auto border border-slate-100 rounded-2xl">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                        <tr class="bg-slate-50/70 border-b border-slate-100 text-[11px] font-bold uppercase tracking-wider text-slate-400 font-headline">
+                            <th class="py-3.5 px-4">Fecha y Hora</th>
+                            <th class="py-3.5 px-4">Mascota</th>
+                            <th class="py-3.5 px-4">Servicio</th>
+                            <th class="py-3.5 px-4">Veterinario</th>
+                            <th class="py-3.5 px-4 text-right">Monto</th>
+                            <th class="py-3.5 px-4 text-center">Estado</th>
+                        </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-sm">
+                        <!-- Estado Vacío -->
+                        <tr th:if="${#lists.isEmpty(citas)}">
+                            <td colspan="6" class="py-10 text-center">
+                                <p class="text-sm font-semibold text-slate-700">No tienes citas registradas actualmente.</p>
+                                <button type="button" onclick="openCitaModal()" class="mt-2 text-xs text-blue-600 hover:underline font-bold">
+                                    Agendar una cita ahora
+                                </button>
+                            </td>
+                        </tr>
+
+                        <!-- Iteración de Citas -->
+                        <tr th:each="c : ${citas}" class="hover:bg-slate-50 transition-colors">
+                            <td class="py-4 px-4 whitespace-nowrap">
+                                <div class="font-bold text-slate-800" th:text="${#temporals.format(c.fechaCita, 'dd MMM, yyyy')}">24 Nov, 2026</div>
+                                <div class="text-xs text-blue-600 font-medium" th:text="${#temporals.format(c.horaCita, 'HH:mm')} + ' hrs'">10:30 hrs</div>
+                            </td>
+                            <td class="py-4 px-4 whitespace-nowrap">
+                                <span class="font-bold text-slate-800" th:text="${c.mascota.nombre}">Mascota</span>
+                                <span class="text-xs text-slate-400 block" th:text="${c.mascota.especie}">Canino</span>
+                            </td>
+                            <td class="py-4 px-4 font-semibold text-slate-800" th:text="${c.servicio.nombre}">Consulta General</td>
+                            <td class="py-4 px-4 whitespace-nowrap text-slate-700" th:text="${c.veterinario.usuario.nombre}">Dr. Nombre</td>
+                            <td class="py-4 px-4 text-right whitespace-nowrap font-bold text-slate-900"
+                                th:text="${c.costoTotal != null ? '$' + #numbers.formatDecimal(c.costoTotal, 0, 'POINT', 0, 'DEFAULT') : '$0'}">
+                                $0
+                            </td>
+                            <td class="py-4 px-4 text-center whitespace-nowrap">
+                                <span class="badge-pill"
+                                      th:classappend="${c.estado == 'PROGRAMADA' ? 'bg-blue-50 text-blue-700 border border-blue-200' : (c.estado == 'CANCELADA' ? 'bg-red-50 text-red-600 border border-red-200' : 'badge-active')}"
+                                      th:text="${c.estado}">
+                                  PROGRAMADA
+                                </span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Modal para Agendar Cita -->
+                <div id="modalCita" th:class="${abrirModalCita == true} ? 'fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm' : 'hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm'">
+                    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-200">
+                        <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
+                            <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2 font-headline">
+                                <i class="fa-regular fa-calendar-check text-[#0058BE]"></i>
+                                Agendar Cita
+                            </h3>
+                            <button type="button" onclick="closeCitaModal()" class="text-slate-400 hover:text-slate-600">
+                                <i class="fa-solid fa-xmark text-lg"></i>
+                            </button>
+                        </div>
+
+                        <div class="mb-4 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold flex items-center gap-2.5" th:if="${mensajeErrorCita}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                            </svg>
+                            <span th:text="${mensajeErrorCita}"></span>
+                        </div>
+
+                        <!-- Advertencia si no tiene mascotas activas -->
+                        <div th:if="${#lists.isEmpty(mascotas)}" class="p-4 bg-amber-50 rounded-xl border border-amber-200 text-amber-800 text-xs">
+                            Debes tener al menos una mascota registrada para agendar una cita.
+                        </div>
+
+                        <form th:if="${!#lists.isEmpty(mascotas)}" th:action="@{/cliente/citas}" th:object="${citaForm}" method="post" class="space-y-4">
+                            <input type="hidden" name="idCliente" th:value="${usuario.idUsuario}"/>
+
+                            <!-- Mascota -->
+                            <div>
+                                <label for="cMascota" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
+                                    Seleccionar Mascota <span class="text-red-500">*</span>
+                                </label>
+                                <select id="cMascota" th:field="*{idMascota}" class="w-full px-3 py-2 text-sm bg-slate-50 rounded-xl border border-slate-200 focus:bg-white focus:outline-none focus:border-blue-600">
+                                    <option value="">Selecciona tu mascota</option>
+                                    <option th:each="m : ${mascotas}" th:value="${m.idMascota}" th:text="${m.nombre} + ' (' + ${m.especie} + ')'"></option>
+                                </select>
+                                <span class="text-xs text-red-600 font-semibold" th:if="${#fields.hasErrors('idMascota')}" th:errors="*{idMascota}"></span>
+                            </div>
+
+                            <!-- Servicio -->
+                            <div>
+                                <label for="cServicio" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
+                                    Servicio Médico <span class="text-red-500">*</span>
+                                </label>
+                                <select id="cServicio" th:field="*{idServicio}" onchange="filtrarVeterinariosPorServicio()" class="w-full px-3 py-2 text-sm bg-slate-50 rounded-xl border border-slate-200 focus:bg-white focus:outline-none focus:border-blue-600">
+                                    <option value="">Selecciona el servicio</option>
+                                    <option th:each="s : ${serviciosDisponibles}"
+                                            th:value="${s.idServicio}"
+                                            th:data-nombre="${s.nombre}"
+                                            th:data-consulta="${s.esConsultaVeterinaria}"
+                                            th:text="${s.nombre} + ' - ' + ${s.duracionMinutos} + ' min - $' + ${#numbers.formatDecimal(s.precioBase, 0, 'POINT', 0, 'DEFAULT')}">
+                                    </option>
+                                </select>
+                                <span class="text-xs text-red-600 font-semibold" th:if="${#fields.hasErrors('idServicio')}" th:errors="*{idServicio}"></span>
+                            </div>
+
+                            <!-- Veterinario -->
+                            <div>
+                                <label for="cVeterinario" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
+                                    Profesional Asignado <span class="text-red-500">*</span>
+                                </label>
+                                <select id="cVeterinario" th:field="*{idVeterinario}" onchange="actualizarHorarioVeterinario()" class="w-full px-3 py-2 text-sm bg-slate-50 rounded-xl border border-slate-200 focus:bg-white focus:outline-none focus:border-blue-600">
+                                    <option value="">Selecciona el profesional</option>
+                                    <option th:each="v : ${veterinariosDisponibles}"
+                                            th:value="${v.idVeterinario}"
+                                            th:data-especialidad="${v.especialidad}"
+                                            th:data-inicio="${v.horaInicio}"
+                                            th:data-fin="${v.horaFin}"
+                                            th:text="${v.nombre} + ' (' + ${v.especialidad} + ') - Horario: ' + ${v.horaInicio} + ' a ' + ${v.horaFin}">
+                                    </option>
+                                </select>
+                                <span class="text-xs text-red-600 font-semibold" th:if="${#fields.hasErrors('idVeterinario')}" th:errors="*{idVeterinario}"></span>
+                                <p id="horarioHelp" class="text-[11px] text-blue-600 mt-1 hidden"></p>
+                            </div>
+
+                            <!-- Fecha y Hora -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="cFecha" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
+                                        Fecha <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="date" id="cFecha" th:field="*{fecha}" class="w-full px-3 py-2 text-sm bg-slate-50 rounded-xl border border-slate-200 focus:bg-white focus:outline-none focus:border-blue-600"/>
+                                    <span class="text-xs text-red-600 font-semibold" th:if="${#fields.hasErrors('fecha')}" th:errors="*{fecha}"></span>
+                                </div>
+                                <div>
+                                    <label for="cHora" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
+                                        Hora (bloques de 15 min) <span class="text-red-500">*</span>
+                                    </label>
+                                    <select id="cHora" th:field="*{hora}" class="w-full px-3 py-2 text-sm bg-slate-50 rounded-xl border border-slate-200 focus:bg-white focus:outline-none focus:border-blue-600">
+                                        <option value="">Selecciona hora</option>
+                                    </select>
+                                    <span class="text-xs text-red-600 font-semibold" th:if="${#fields.hasErrors('hora')}" th:errors="*{hora}"></span>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                                <button type="button" onclick="closeCitaModal()" class="px-4 py-2 text-slate-600 hover:text-slate-800 text-sm font-semibold">
+                                    Cancelar
+                                </button>
+                                <button type="submit" class="px-5 py-2 bg-[#0058BE] hover:bg-blue-700 text-white text-sm font-bold rounded-xl shadow-sm transition-all">
+                                    Confirmar y Agendar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+</div>
+
+<!-- Scripts Interaccionales -->
+<script>
+    function openChangePasswordModal() {
+        const modal = document.getElementById('passwordModal');
+        if (modal) {
+            modal.classList.remove('hidden');
+        }
+    }
+
+    function closeChangePasswordModal() {
+        const modal = document.getElementById('passwordModal');
+        if (modal) {
+            modal.classList.add('hidden');
+        }
+    }
+
+    function openMascotaModal() {
+        const modal = document.getElementById('modalMascota');
+        if (modal) {
+            modal.classList.remove('hidden');
+        }
+    }
+
+    function closeMascotaModal() {
+        const modal = document.getElementById('modalMascota');
+        if (modal) {
+            modal.classList.add('hidden');
+        }
+    }
+
+    function openCitaModal() {
+        const modal = document.getElementById('modalCita');
+        if (modal) {
+            modal.classList.remove('hidden');
+        }
+    }
+
+    function closeCitaModal() {
+        const modal = document.getElementById('modalCita');
+        if (modal) {
+            modal.classList.add('hidden');
+        }
+    }
+
+    let opcionesVeterinariosOriginales = [];
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const selectVet = document.getElementById("cVeterinario");
+        if (selectVet) {
+            opcionesVeterinariosOriginales = Array.from(selectVet.options).slice(1);
+        }
+        // Si la fecha está vacía, poner como mínimo hoy
+        const inputFecha = document.getElementById("cFecha");
+        if (inputFecha && !inputFecha.value) {
+            inputFecha.min = new Date().toISOString().split("T")[0];
+        }
+    });
+
+    function filtrarVeterinariosPorServicio() {
+        const selectServicio = document.getElementById("cServicio");
+        const selectVet = document.getElementById("cVeterinario");
+        if (!selectServicio || !selectVet) return;
+
+        const opcionServicio = selectServicio.options[selectServicio.selectedIndex];
+        const nombreServicio = opcionServicio.getAttribute("data-nombre") ? opcionServicio.getAttribute("data-nombre").toLowerCase() : "";
+
+        // Resetear opciones de veterinario
+        selectVet.innerHTML = '<option value="">Selecciona el profesional</option>';
+
+        opcionesVeterinariosOriginales.forEach(opt => {
+            const especialidad = opt.getAttribute("data-especialidad") ? opt.getAttribute("data-especialidad").toLowerCase() : "";
+
+            // Reglas de compatibilidad:
+            // 1. Si el servicio es cirugía o quirúrgico, exige especialidad en cirugía o medicina general
+            // 2. Si el servicio es odontología, prioriza odontología o medicina general
+            // 3. Los de "Medicina general" o "General" atienden consultas y chequeos regulares
+            let compatible = true;
+            if (nombreServicio.includes("cirug") && !especialidad.includes("cirug")) {
+                compatible = false;
+            } else if (nombreServicio.includes("odont") && !especialidad.includes("odont") && !especialidad.includes("general")) {
+                compatible = false;
+            } else if (nombreServicio.includes("peluquer") && !especialidad.includes("estét") && !especialidad.includes("peluquer") && !especialidad.includes("general")) {
+                compatible = false;
+            }
+
+            if (compatible) {
+                selectVet.appendChild(opt.cloneNode(true));
+            }
+        });
+
+        actualizarHorarioVeterinario();
+    }
+
+    function actualizarHorarioVeterinario() {
+        const selectVet = document.getElementById("cVeterinario");
+        const selectHora = document.getElementById("cHora");
+        const help = document.getElementById("horarioHelp");
+        if (!selectVet || !selectHora) return;
+
+        // Resetear las opciones de hora
+        selectHora.innerHTML = '<option value="">Selecciona hora</option>';
+
+        const opt = selectVet.options[selectVet.selectedIndex];
+        if (!opt || !opt.value) {
+            if (help) help.classList.add("hidden");
+            return;
+        }
+
+        const inicioStr = opt.getAttribute("data-inicio"); // ej: "08:00"
+        const finStr = opt.getAttribute("data-fin");       // ej: "17:00"
+
+        if (!inicioStr || !finStr) {
+            if (help) help.classList.add("hidden");
+            return;
+        }
+
+        const [hInicio, mInicio] = inicioStr.split(":").map(Number);
+        const [hFin, mFin] = finStr.split(":").map(Number);
+
+        let minutosActuales = hInicio * 60 + mInicio;
+        const minutosLimite = hFin * 60 + mFin;
+
+        // Generar físicamente solo opciones en múltiplos estrictos de 15 minutos
+        while (minutosActuales < minutosLimite) {
+            const h = Math.floor(minutosActuales / 60);
+            const m = minutosActuales % 60;
+
+            const hFormateada = h.toString().padStart(2, "0");
+            const mFormateada = m.toString().padStart(2, "0");
+            const valorHora = `${hFormateada}:${mFormateada}`;
+
+            const option = document.createElement("option");
+            option.value = valorHora;
+            option.textContent = `${valorHora} hrs`;
+            selectHora.appendChild(option);
+
+            minutosActuales += 15; // Salto estricto de 15 minutos
+        }
+
+        if (help) {
+            help.innerText = `Turno disponible de ${inicioStr} a ${finStr}.`;
+            help.classList.remove("hidden");
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,6 +1,7 @@
 package com.dbodor.veterinariaweb.controller;
 
 import com.dbodor.veterinariaweb.security.RutasPorRol;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,14 +13,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class InicioController {
 
-    @GetMapping("/")
+    @GetMapping({"/", "/home"})
     public String raiz(Authentication auth) {
-        return "redirect:" + RutasPorRol.inicioDe(auth);
+        // Si el usuario SÍ está autenticado (y no es anónimo), lo mandamos a su panel
+        if (auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken)) {
+            return "redirect:" + RutasPorRol.inicioDe(auth);
+        }
+
+        return "home";
     }
 
     @GetMapping("/cliente/citas")
     public String citasDelCliente() {
-        return "cliente/citas";
+        return "redirect:/cliente/dashboard?seccion=citas";
     }
 
     @GetMapping("/veterinario/agenda")

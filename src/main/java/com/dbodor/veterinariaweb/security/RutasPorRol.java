@@ -11,7 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 public final class RutasPorRol {
 
     public static final String PANEL_ADMIN = "/admin";
-    public static final String INICIO_CLIENTE = "/cliente/citas";
+    public static final String INICIO_CLIENTE = "/cliente/dashboard";
     public static final String INICIO_VETERINARIO = "/veterinario/agenda";
     public static final String LOGIN = "/login";
 
