@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Registrar mascota | Veterinaria</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+
+<header class="barra">
+    <span class="marca">Veterinaria</span>
+    <form th:action="@{/logout}" method="post" class="en-linea">
+        <button type="submit" class="boton-enlace">Cerrar sesion</button>
+    </form>
+</header>
+
+<div class="disposicion">
+
+    <nav class="menu">
+        <p class="grupo">Maestros</p>
+        <a th:href="@{/admin/clientes}">Clientes</a>
+        <a th:href="@{/admin/veterinarios}">Veterinarios</a>
+        <a th:href="@{/admin/mascotas}" class="activo">Mascotas</a>
+        <a th:href="@{/admin/servicios}">Servicios</a>
+        <a th:href="@{/admin/productos}">Productos</a>
+
+        <p class="grupo">Transaccional</p>
+        <a th:href="@{/admin/citas}">Reservas de citas</a>
+
+        <p class="grupo">Reportes</p>
+        <a th:href="@{/admin/reportes/citas}">Citas e ingresos</a>
+        <a th:href="@{/admin/reportes/historias}">Historias clinicas</a>
+    </nav>
+
+    <main class="contenido">
+        <h1>Registrar mascota</h1>
+
+        <form th:action="@{/admin/mascotas}" th:object="${mascotaForm}" method="post" class="formulario">
+
+            <div class="campo">
+                <label for="idCliente">Dueno</label>
+                <select id="idCliente" th:field="*{idCliente}">
+                    <option value="">Seleccione el cliente</option>
+                    <option th:each="cl : ${clientes}" th:value="${cl.idUsuario}"
+                            th:text="${cl.nombre} + ' - ' + ${cl.documento}">Cliente</option>
+                </select>
+                <span class="error" th:if="${#fields.hasErrors('idCliente')}" th:errors="*{idCliente}">error</span>
+            </div>
+
+            <div class="campo">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" th:field="*{nombre}" maxlength="80">
+                <span class="error" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}">error</span>
+            </div>
+
+            <div class="fila">
+                <div class="campo">
+                    <label for="especie">Especie</label>
+                    <select id="especie" th:field="*{especie}">
+                        <option value="">Seleccione</option>
+                        <option th:each="e : ${especies}" th:value="${e}" th:text="${e}">Especie</option>
+                    </select>
+                    <span class="error" th:if="${#fields.hasErrors('especie')}" th:errors="*{especie}">error</span>
+                </div>
+                <div class="campo">
+                    <label for="raza">Raza (opcional)</label>
+                    <input type="text" id="raza" th:field="*{raza}" maxlength="80">
+                    <span class="error" th:if="${#fields.hasErrors('raza')}" th:errors="*{raza}">error</span>
+                </div>
+            </div>
+
+            <div class="fila">
+                <div class="campo">
+                    <label for="sexo">Sexo</label>
+                    <select id="sexo" th:field="*{sexo}">
+                        <option value="">Seleccione</option>
+                        <option value="M">Macho</option>
+                        <option value="H">Hembra</option>
+                    </select>
+                    <span class="error" th:if="${#fields.hasErrors('sexo')}" th:errors="*{sexo}">error</span>
+                </div>
+                <div class="campo">
+                    <label for="fechaNacimiento">Fecha de nacimiento</label>
+                    <input type="date" id="fechaNacimiento" th:field="*{fechaNacimiento}">
+                    <span class="error" th:if="${#fields.hasErrors('fechaNacimiento')}" th:errors="*{fechaNacimiento}">error</span>
+                </div>
+                <div class="campo">
+                    <label for="pesoKg">Peso (kg)</label>
+                    <input type="number" id="pesoKg" th:field="*{pesoKg}" step="0.1" min="0.1">
+                    <span class="error" th:if="${#fields.hasErrors('pesoKg')}" th:errors="*{pesoKg}">error</span>
+                </div>
+            </div>
+
+            <div class="acciones">
+                <button type="submit">Guardar</button>
+                <a th:href="@{/admin/mascotas}" class="boton-enlace">Cancelar</a>
+            </div>
+        </form>
+    </main>
+</div>
+
+</body>
+</html>
