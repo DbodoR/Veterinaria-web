@@ -60,7 +60,7 @@
             <div class="fila">
                 <div class="campo">
                     <label for="precioUnitario">Precio unitario</label>
-                    <input type="number" id="precioUnitario" th:field="*{precioUnitario}" step="100" min="1">
+                    <input type="number" id="precioUnitario" th:field="*{precioUnitario}" step="0.01" min="0.01">
                     <span class="error" th:if="${#fields.hasErrors('precioUnitario')}" th:errors="*{precioUnitario}">error</span>
                 </div>
                 <div class="campo">
