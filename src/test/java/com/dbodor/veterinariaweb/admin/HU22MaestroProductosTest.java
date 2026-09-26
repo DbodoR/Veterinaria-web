@@ -220,7 +220,7 @@ class HU22MaestroProductosTest {
     @DisplayName("Acceso - un cliente no entra al maestro de productos")
     void clienteNoEntra() throws Exception {
         mockMvc.perform(get("/admin/productos"))
-                .andExpect(redirectedUrl("/cliente/citas"));
+                .andExpect(redirectedUrl("/cliente/dashboard"));
     }
 
     @Test

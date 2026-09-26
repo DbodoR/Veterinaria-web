@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reporte de citas e ingresos | Veterinaria</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+
+<header class="barra">
+    <span class="marca">Veterinaria</span>
+    <form th:action="@{/logout}" method="post" class="en-linea">
+        <button type="submit" class="boton-enlace">Cerrar sesion</button>
+    </form>
+</header>
+
+<div class="disposicion">
+
+    <nav class="menu">
+        <p class="grupo">Maestros</p>
+        <a th:href="@{/admin/clientes}">Clientes</a>
+        <a th:href="@{/admin/veterinarios}">Veterinarios</a>
+        <a th:href="@{/admin/mascotas}">Mascotas</a>
+        <a th:href="@{/admin/servicios}">Servicios</a>
+        <a th:href="@{/admin/productos}">Productos</a>
+
+        <p class="grupo">Transaccional</p>
+        <a th:href="@{/admin/citas}">Reservas de citas</a>
+
+        <p class="grupo">Reportes</p>
+        <a th:href="@{/admin/reportes/citas}" class="activo">Citas e ingresos</a>
+        <a th:href="@{/admin/reportes/historias}">Historias clinicas</a>
+    </nav>
+
+    <main class="contenido">
+        <h1>Reporte de citas e ingresos</h1>
+
+        <form th:action="@{/admin/reportes/citas}" method="get" class="formulario">
+            <div class="fila">
+                <div class="campo">
+                    <label for="desde">Desde</label>
+                    <input type="date" id="desde" name="desde" th:value="${desde}">
+                </div>
+                <div class="campo">
+                    <label for="hasta">Hasta</label>
+                    <input type="date" id="hasta" name="hasta" th:value="${hasta}">
+                </div>
+                <div class="campo">
+                    <label for="idVeterinario">Veterinario</label>
+                    <select id="idVeterinario" name="idVeterinario">
+                        <option value="">Todos</option>
+                        <option th:each="v : ${veterinarios}" th:value="${v.idVeterinario}"
+                                th:text="${v.nombre}"
+                                th:selected="${v.idVeterinario == idVeterinario}">Veterinario</option>
+                    </select>
+                </div>
+            </div>
+            <div class="acciones">
+                <button type="submit">Generar reporte</button>
+            </div>
+        </form>
+
+        <div class="alerta alerta-error" th:if="${error}" th:text="${error}"></div>
+
+        <th:block th:if="${reporte != null}">
+
+            <table class="tabla">
+                <thead>
+                <tr>
+                    <th>Total de citas</th>
+                    <th>Finalizadas</th>
+                    <th>Canceladas</th>
+                    <th>Ingresos (finalizadas)</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td th:text="${reporte.total}">0</td>
+                    <td th:text="${reporte.finalizadas}">0</td>
+                    <td th:text="${reporte.canceladas}">0</td>
+                    <td th:text="'$' + ${#numbers.formatDecimal(reporte.ingresos, 0, 'POINT', 0, 'DEFAULT')}">$0</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <table class="tabla" th:if="${!reporte.citas.isEmpty()}">
+                <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>Mascota</th>
+                    <th>Servicio</th>
+                    <th>Veterinario</th>
+                    <th>Estado</th>
+                    <th>Valor</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="c : ${reporte.citas}">
+                    <td th:text="${c.fechaCita}">2026-08-05</td>
+                    <td th:text="${c.mascota.usuario.nombre}">Cliente</td>
+                    <td th:text="${c.mascota.nombre}">Mascota</td>
+                    <td th:text="${c.servicio.nombre}">Servicio</td>
+                    <td th:text="${c.veterinario.nombre}">Veterinario</td>
+                    <td th:text="${c.estado}">Estado</td>
+                    <td th:text="'$' + ${#numbers.formatDecimal(c.costoTotal, 0, 'POINT', 0, 'DEFAULT')}">Valor</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <p class="vacio" th:if="${reporte.citas.isEmpty()}">
+                No hay citas para ese periodo.
+            </p>
+        </th:block>
+
+    </main>
+</div>
+
+</body>
+</html>

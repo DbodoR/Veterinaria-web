@@ -245,7 +245,7 @@ class HU01RegistrarClienteTest {
     void clienteNoEntra() throws Exception {
         mockMvc.perform(get("/admin/clientes"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/cliente/citas"));
+                .andExpect(redirectedUrl("/cliente/dashboard"));
     }
 
     @Test
