@@ -72,5 +72,15 @@ public interface CitaRepository extends JpaRepository<Cita, Long> {
             """)
     List<Cita> reportePorRango(@Param("desde") LocalDate desde, @Param("hasta") LocalDate hasta);
 
+        /** HU-24: atenciones de una mascota, de la mas reciente a la mas antigua. */
+    @Query("""
+            select c from Cita c
+              join fetch c.servicio
+              join fetch c.veterinario
+            where c.mascota.idMascota = :idMascota
+            order by c.fechaCita desc, c.horaCita desc
+            """)
+    List<Cita> historialDeMascota(@Param("idMascota") Long idMascota);
+
     
 }
